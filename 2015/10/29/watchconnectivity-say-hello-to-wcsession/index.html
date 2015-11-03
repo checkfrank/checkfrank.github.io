@@ -1,0 +1,400 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>WatchConnectivity：学习 WCSession | Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="[object Object]">
+    
+    <meta name="description" content="原文链接=http://natashatherobot.com/watchconnectivity-say-hello-to-wcsession/作者=Natasha The Robot原文日期=2015-09-21译者=小袋子校对=numbbbbb定稿=千叶知风
+&lt;!--此处开始正文--&gt;
+在读这篇文章之前，请检查一下你是否已经学习了之前两篇关于WatchOS 2的文章：
+
+WatchOS 2: Hello, World
+WatchConnectivity Introduction: Say Goodbye To The Spinner
+
+WCSession就是WatchConnectivity的魔力源泉，所以让我们赶紧深挖它吧！">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="Hexo" title="Hexo"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Hexo">Hexo</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/29/watchconnectivity-say-hello-to-wcsession/" title="WatchConnectivity：学习 WCSession" itemprop="url">WatchConnectivity：学习 WCSession</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="[object Object]">[object Object]</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-10-29T05:55:40.488Z" itemprop="datePublished">2015-10-29</time>
+    更新日期:<time datetime="2015-10-29T05:55:40.488Z" itemprop="dateModified">2015-10-29</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#检查设备是否支持"><span class="toc-number">1.</span> <span class="toc-text">检查设备是否支持</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Watch_相关的_iOS_App_状态"><span class="toc-number">2.</span> <span class="toc-text">Watch 相关的 iOS App 状态</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#检查设备可达状态"><span class="toc-number">3.</span> <span class="toc-text">检查设备可达状态</span></a></li></ol>
+		</div>
+		
+		<p>原文链接=<a href="http://natashatherobot.com/watchconnectivity-say-hello-to-wcsession/" target="_blank" rel="external">http://natashatherobot.com/watchconnectivity-say-hello-to-wcsession/</a><br>作者=Natasha The Robot<br>原文日期=2015-09-21<br>译者=小袋子<br>校对=numbbbbb<br>定稿=千叶知风</p>
+<!--此处开始正文-->
+<p>在读这篇文章之前，请检查一下你是否已经学习了之前两篇关于<code>WatchOS 2</code>的文章：</p>
+<ul>
+<li><a href="http://natashatherobot.com/watchos-2-hello-world/" target="_blank" rel="external">WatchOS 2: Hello, World</a></li>
+<li><a href="http://natashatherobot.com/watchconnectivity-introduction-say-goodbye-to-the-spinner/" target="_blank" rel="external">WatchConnectivity Introduction: Say Goodbye To The Spinner</a></li>
+</ul>
+<p><code>WCSession</code>就是<code>WatchConnectivity</code>的魔力源泉，所以让我们赶紧深挖它吧！<br><a id="more"></a><br><code>WCSession.defaultSession()</code>会返回<code>WCSession</code>的单例，用于在 iOS 和 Watch 应用之间传输数据。但是，在使用<code>WCSession</code>时仍有一些值得注意的地方。</p>
+<p>首先，你必须给<code>session</code>设置一个<code>delegate</code>并启动它。</p>
+<blockquote>
+<p>“默认的<code>session</code>用于两个对应应用的通信（例如 iOS 应用和它的原生 WatchKit 扩展）。这个<code>session</code>提供发送、接收和追踪状态的方法。</p>
+<p>启动一个应用时，应该在默认的<code>session</code>上设置一个<code>delegate</code>并启动它。这将允许系统填充状态属性和提供任何优秀的背景传输。”—— Apple 文档说明。</p>
+</blockquote>
+<p>所以你的代码应该写成这样：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> session = <span class="type">WCSession</span>.defaultSession()</span><br><span class="line">session.delegate = <span class="keyword">self</span></span><br><span class="line">session.activateSession()</span><br></pre></td></tr></table></figure>
+<p>在这里，我推荐将你的<code>WCSession</code>作为一个单例，这样就可以在应用中随意使用它：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> WatchConnectivity</span><br><span class="line"></span><br><span class="line"><span class="comment">// Note that the WCSessionDelegate must be an NSObject </span></span><br><span class="line"><span class="comment">// So no, you cannot use the nice Swift struct here!</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WatchSessionManager</span>: <span class="title">NSObject</span>, <span class="title">WCSessionDelegate</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Instantiate the Singleton</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">let</span> sharedManager = <span class="type">WatchSessionManager</span>()</span><br><span class="line">    private <span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Keep a reference for the session, </span></span><br><span class="line">    <span class="comment">// which will be used later for sending / receiving data</span></span><br><span class="line">    private <span class="keyword">let</span> session = <span class="type">WCSession</span>.defaultSession()</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Activate Session</span></span><br><span class="line">    <span class="comment">// This needs to be called to activate the session before first use!</span></span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">startSession</span><span class="params">()</span></span> &#123;</span><br><span class="line">        session.delegate = <span class="keyword">self</span></span><br><span class="line">        session.activateSession()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在你可以在<code>AppDelegate</code>的<code>application:didFinishLaunchingWithOptions</code>方法中启动你的<code>session</code>，并且可以在应用的任意位置使用：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@<span class="type">UIApplicationMain</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AppDelegate</span>: <span class="title">UIResponder</span>, <span class="title">UIApplicationDelegate</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// truncated...</span></span><br><span class="line"></span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">application</span><span class="params">(application: UIApplication,</span><br><span class="line">        didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?)</span></span> -&gt; <span class="type">Bool</span></span><br><span class="line">    &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// Set up and activate your session early here!</span></span><br><span class="line">        <span class="type">WatchSessionManager</span>.sharedManager.startSession()</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// truncated...</span></span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是启动<code>session</code>是远远不够的。你需要通过<code>WCSession</code>的多重检查，这样你的应用就不需要做额外的格式化传输数据工作。</p>
+<h1 id="检查设备是否支持">检查设备是否支持</h1><blockquote>
+<p>检查 iOS 设备是否支持 session，WatchOS 也是支持 session 的。</p>
+</blockquote>
+<p>如果你有一个通用应用，那就需要注意，例如iPad 不支持<code>WCSession</code>（因为 iPad 不能和 Watch 配对）。因此确保在 iOS 项目中做<code>isSupported()</code>检查：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="type">WCSession</span>.isSupported() &#123;</span><br><span class="line">    <span class="keyword">let</span> session = <span class="type">WCSession</span>.defaultSession()</span><br><span class="line">    session.delegate = <span class="keyword">self</span></span><br><span class="line">    session.activateSession()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这意味着你的<code>WatchSessionManager</code>单例需要适应不支持<code>WCSession</code>的场景（使用可选值）：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Modification to the WatchSessionManager in the iOS app only</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WatchSessionManager</span>: <span class="title">NSObject</span>, <span class="title">WCSessionDelegate</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// truncated ... see above section</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// the session is now an optional, since it might not be supported</span></span><br><span class="line">    private <span class="keyword">let</span> session: <span class="type">WCSession</span>? = <span class="type">WCSession</span>.isSupported() ? <span class="type">WCSession</span>.defaultSession() : <span class="literal">nil</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// starting a session has to now deal with it being an optional</span></span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">startSession</span><span class="params">()</span></span> &#123;</span><br><span class="line">        session?.delegate = <span class="keyword">self</span></span><br><span class="line">        session?.activateSession()</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="Watch_相关的_iOS_App_状态">Watch 相关的 iOS App 状态</h1><p>如果你从 iOS 应用发送数据到 Watch，你需要做一些额外的检查，这样当 Watch 处于无法接受数据的状态时，你就不会浪费 CPU 资源去处理用于传输的数据。</p>
+<p><strong>是否配对</strong></p>
+<p>显然，为了从 iOS 设备传输数据到 Watch，用户必须有一个 Watch 并且和 iOS 设备配对。</p>
+<p><strong>是否安装 Watch 应用</strong></p>
+<p>一个用户可能有一对设备，当然可以选择删除手表中的应用，所以为了数据传输，你需要检查你的应用确实有安装在所配对的 Apple Watch 上面。</p>
+<p>如果用户有一对设备但是没有对应的应用，那你就可以在合适的时机向用户推荐你的应用，他很可能会安装你的应用。</p>
+<p>为了让这些检查更加简单，并且能够在应用中随意使用，我喜欢在 iOS 应用中创建一个<code>validSession</code>变量：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Modification to the WatchSessionManager in the iOS app only</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WatchSessionManager</span>: <span class="title">NSObject</span>, <span class="title">WCSessionDelegate</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// truncated... see above</span></span><br><span class="line">    </span><br><span class="line">    private <span class="keyword">let</span> session: <span class="type">WCSession</span>? = <span class="type">WCSession</span>.isSupported() ? <span class="type">WCSession</span>.defaultSession() : <span class="literal">nil</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Add a validSession variable to check that the Watch is paired</span></span><br><span class="line">    <span class="comment">// and the Watch App installed to prevent extra computation </span></span><br><span class="line">    <span class="comment">// if these conditions are not met.</span></span><br><span class="line">     </span><br><span class="line">    <span class="comment">// This is a computed property, since the user can pair their device and / or</span></span><br><span class="line">    <span class="comment">// install your app while using your iOS app, so this can become valid  </span></span><br><span class="line">    </span><br><span class="line">    private <span class="keyword">var</span> validSession: <span class="type">WCSession</span>? &#123;</span><br><span class="line">       </span><br><span class="line">        <span class="comment">// paired - the user has to have their device paired to the watch</span></span><br><span class="line">        <span class="comment">// watchAppInstalled - the user must have your watch app installed</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// Note: if the device is paired, but your watch app is not installed</span></span><br><span class="line">        <span class="comment">// consider prompting the user to install it for a better experience</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> session = session <span class="keyword">where</span> session.paired &amp;&amp; session.watchAppInstalled &#123;</span><br><span class="line">            <span class="keyword">return</span> session</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// truncated... see above</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>并发是否可用</strong></p>
+<p>最后，如果你在应用中有使用并发，你必须检查并发是否可用。我不会在<code>WatchConnectivity</code>教程中介绍过多并发的细节，但是如果你想要知道更多，可以观看超级有用和全面的 <a href="https://developer.apple.com/videos/wwdc/2015/?id=209" target="_blank" rel="external">WWDC 2015 Creating Complications with ClockKit session</a>。</p>
+<p><strong>sessionWatchStateDidChange</strong></p>
+<p>注意，如果你的 iOS 应用需要<code>WCSession</code>状态变化的信息，这里有一个 delegate 方法，专门用于通知<code>WCSession</code>的状态变化：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Called when any of the Watch state properties change */</span></span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">sessionWatchStateDidChange</span><span class="params">(session: WCSession)</span></span> &#123;</span><br><span class="line">        <span class="comment">// handle state change here</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>例如，如果你的应用需要安装 Watch 应用，可以实现这个<code>delegate</code>方法，然后去检测你的 Watch 应用是否真正安装了，并且让用户在 iOS 应用中进行设置。</p>
+<h1 id="检查设备可达状态">检查设备可达状态</h1><p>为了正确在 iOS 和 Watch 中使用<code>Interactive Messaging</code>传输数据，你需要做一些额外的工作以确保两个应用处于可达状态：</p>
+<blockquote>
+<p>Watch 应用的可达状态需要所配对的 iOS 设备在重启后至少解锁一次。这个属性能够用于决定 iOS 设备是否需要被解锁。如果<code>reachable</code>设为<code>NO</code>，可能是由于设备重启过，需要解锁。如果处于这种状态，Watch 将会展示一个提示框建议用户去解锁他们配对的 iOS 设备。</p>
+</blockquote>
+<p>在使用<code>Interactive Messaging</code>时，我喜欢给我的单例增加一个额外的<code>valideReachableSession</code>变量：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MARK: Interactive Messaging</span></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">WatchSessionManager</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Live messaging! App has to be reachable</span></span><br><span class="line">    private <span class="keyword">var</span> validReachableSession: <span class="type">WCSession</span>? &#123;</span><br><span class="line">        <span class="comment">// check for validSession on iOS only (see above)</span></span><br><span class="line">        <span class="comment">// in your Watch App, you can just do an if session.reachable check</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> session = validSession <span class="keyword">where</span> session.reachable &#123;</span><br><span class="line">            <span class="keyword">return</span> session</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>如果<code>session</code>是不可达的，你可以如 Apple 所建议的那样，提示用户去解锁他们的 iOS 设备。为了获知用户解锁设备，实现<code>sessionReachabilityDidChange</code>的<code>delegate</code>方法：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">sessionReachabilityDidChange</span><span class="params">(session: WCSession)</span></span> &#123;</span><br><span class="line">    <span class="comment">// handle session reachability change</span></span><br><span class="line">    <span class="keyword">if</span> session.reachable &#123;</span><br><span class="line">        <span class="comment">// great! continue on with Interactive Messaging</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 😥 prompt the user to unlock their iOS device</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上！现在你应该已经知道了<code>WCSession</code>的一些要领，所以我们将会学习更加好玩的部分 —— 真正使用它在 iOS 和 Watch 之间接收和发送收据！</p>
+<p>你可以在 GitHub 查看完整的<a href="https://gist.github.com/NatashaTheRobot/6bcbe79afd7e9572edf6" target="_blank" rel="external">WatchSessionManager单例</a>。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Natasha-The-Robot/">Natasha The Robot</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Swift-入门/">Swift 入门</a>►<a class="article-category-link" href="/categories/Swift-入门/WatchOS-2/">WatchOS 2</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/10/29/watchconnectivity-say-hello-to-wcsession/" data-title="WatchConnectivity：学习 WCSession | Hexo" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/11/03/watchconnectivity-introduction-say-goodbye-to-the-spinner/" title="WatchConnectivity 介绍：告别加载等待">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  WatchConnectivity 介绍：告别加载等待</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/10/29/3d-touch-impressions-and-thoughts/"  title="3D Touch之我见">
+ <strong>NEXT:</strong><br/> 
+ <span>3D Touch之我见
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#检查设备是否支持"><span class="toc-number">1.</span> <span class="toc-text">检查设备是否支持</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Watch_相关的_iOS_App_状态"><span class="toc-number">2.</span> <span class="toc-text">Watch 相关的 iOS App 状态</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#检查设备可达状态"><span class="toc-number">3.</span> <span class="toc-text">检查设备可达状态</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分類</p>
+		<ul>
+		
+			<li><a href="/categories/3D-Touch/" title="3D Touch">3D Touch<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Swift/" title="Swift">Swift<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Swift-进阶/" title="Swift 进阶">Swift 进阶<sup>6</sup></a></li>
+		
+			<li><a href="/categories/Swift-入门/WatchOS-2/" title="WatchOS 2">WatchOS 2<sup>2</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/APPVENTURE/" title="APPVENTURE">APPVENTURE<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Crunchy-Development/" title="Crunchy Development">Crunchy Development<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Erica-Sadun/" title="Erica Sadun">Erica Sadun<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Jameson-Quave/" title="Jameson Quave">Jameson Quave<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Natasha-The-Robot/" title="Natasha The Robot">Natasha The Robot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Ole-Begemann/" title="Ole Begemann">Ole Begemann<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Raj-Kandathi/" title="Raj Kandathi">Raj Kandathi<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swift/" title="Swift">Swift<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thomas-Hanning/" title="Thomas Hanning">Thomas Hanning<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Tomasz-Szulc/" title="Tomasz Szulc">Tomasz Szulc<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ericasadun/" title="ericasadun">ericasadun<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="[object Object]">[object Object]</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

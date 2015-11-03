@@ -1,0 +1,443 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>try? 的替代实现 | Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="[object Object]">
+    
+    <meta name="description" content="原文链接=http://ericasadun.com/2015/09/03/alternatives-to-try-swiftlang/作者=Erica Sadun原文日期=2015-09-03译者=我偏笑校对=shanks定稿=千叶知风发布时间=2015-10-13T09:00:00
+try？ 语法的优点在于你不必把可能会抛出错误的函数写在一个 do-catch 代码块当中。如果你使用了 try?，该函数的返回值就会是一个可选类型：成功返回 .Some，失败则返回 .None。你可以配合着 if-let 或者 guard 语句来使用 try? 语法。">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="Hexo" title="Hexo"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Hexo">Hexo</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/13/alternatives-to-try-swiftlang/" title="try? 的替代实现" itemprop="url">try? 的替代实现</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="[object Object]">[object Object]</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-10-13T01:00:00.000Z" itemprop="datePublished">2015-10-13</time>
+    更新日期:<time datetime="2015-10-15T02:18:14.038Z" itemprop="dateModified">2015-10-15</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		
+		</div>
+		
+		<p>原文链接=<a href="http://ericasadun.com/2015/09/03/alternatives-to-try-swiftlang/" target="_blank" rel="external">http://ericasadun.com/2015/09/03/alternatives-to-try-swiftlang/</a><br>作者=Erica Sadun<br>原文日期=2015-09-03<br>译者=我偏笑<br>校对=shanks<br>定稿=千叶知风<br>发布时间=2015-10-13T09:00:00</p>
+<p><code>try？</code> 语法的优点在于你不必把可能会抛出错误的函数写在一个 <code>do-catch</code> 代码块当中。如果你使用了 <code>try?</code>，该函数的返回值就会是一个可选类型：成功返回 <code>.Some</code>，失败则返回 <code>.None</code>。你可以配合着 <code>if-let</code> 或者 <code>guard</code> 语句来使用 <code>try?</code> 语法。<br><a id="more"></a><br><code>try?</code> 语法的不足则在于它对错误的简化，让你难以了解到错误是什么以及错误发生的时间。这可不是件好事。</p>
+<p>但你可以试着自己写出 <code>try?</code> 的替代方法。比如实现一个简单的枚举<code>Result</code>：</p>
+<pre><code><span class="class"><span class="keyword">enum</span> <span class="title">Result</span>&lt;<span class="title">T</span>&gt; {</span>
+    <span class="keyword">case</span> <span class="constant">Value</span>(<span class="constant">T</span>)
+    <span class="keyword">case</span> <span class="constant">Error</span>(<span class="constant">ErrorType</span>)
+}
+</code></pre><p>就像上面的代码写的那样，我喜欢分成 <code>Value</code> 和 <code>Error</code> 而不是 <code>err</code> 和 <code>ok</code> ，枚举的不同状态可以按你自己的喜好来命名。</p>
+<p>然后你可以写个函数来执行 <code>do-catch</code> 语句，然后把执行结果包含在上面定义的枚举中返回。</p>
+<pre><code>func tryit&lt;T&gt;<span class="function"><span class="params">(block: () throws -&gt; T)</span> -&gt;</span> Result&lt;T&gt; {
+    <span class="keyword">do</span> {
+        <span class="keyword">let</span> value = <span class="keyword">try</span> block()
+        <span class="keyword">return</span> Result.Value(value)
+    } <span class="keyword">catch</span> {<span class="keyword">return</span> Result.Error(error)}
+}
+</code></pre><p>实际上我也不太喜欢 tryit 这个名字，你可以你喜欢的名字代替。</p>
+<p>这个函数的调用有点啰嗦。原来的写法是：</p>
+<pre><code><span class="keyword">let</span> <span class="literal">result</span> = <span class="keyword">try</span> myFailableCoinToss()
+</code></pre><p>新的写法是：</p>
+<p><del><code>let result = tryit{try myFailableCoinToss()}</code></del> <em>感谢bigonotetaker指出错误</em><br><code>let result = tryit(myFailableCoinToss)</code></p>
+<p>读者glessard提供给我一个很棒的替代方式，建议我给<code>Result</code>添加一个初始化方法而不是用 tryit：</p>
+<pre><code><span class="class"><span class="keyword">enum</span> <span class="title">Result</span>&lt;<span class="title">T</span>&gt; {</span>
+    <span class="keyword">case</span> <span class="constant">Value</span>(<span class="constant">T</span>)
+    <span class="keyword">case</span> <span class="constant">Error</span>(<span class="constant">ErrorType</span>)
+
+    init(_ <span class="symbol">block:</span> () throws -&gt; <span class="constant">T</span>) {
+        <span class="keyword">do</span> {
+            let value = try block()
+            <span class="keyword">self</span> = <span class="constant">Result</span>.<span class="constant">Value</span>(value)
+        } catch {
+            <span class="keyword">self</span> = <span class="constant">Result</span>.<span class="constant">Error</span>(error)
+        }
+    }
+}
+</code></pre><p>然后你直接这么调用就行了：</p>
+<pre><code><span class="keyword">let</span> <span class="literal">result</span> = <span class="type">Result</span>(myFailableCoinToss)
+</code></pre><p>你需要用 <code>if-let</code> 和 <code>guard</code> 之外的语句来拆包你的返回值，可以用 <code>switch</code>：</p>
+<p><del><code>let result = tryit{try myFailableCoinToss()}</code></del><br>    let result = tryit(myFailableCoinToss)<br>    switch result {<br>    case .Value(let value): print(“Success:”, value)<br>    case .Error(let error): print(“Failure:”, error)<br>    }</p>
+<p>或者直接用模式匹配：</p>
+<pre><code><span class="keyword">if</span> <span class="keyword">case</span> .<span class="type">Value</span>(<span class="keyword">let</span> value) = <span class="literal">result</span> {
+    print(<span class="string">"Success:"</span>, value)
+} <span class="keyword">else</span> <span class="keyword">if</span> <span class="keyword">case</span> .<span class="type">Error</span>(<span class="keyword">let</span> error) = <span class="literal">result</span> {
+    print(<span class="string">"Failure:"</span>, error)
+}
+</code></pre><p>你也可以添加一些退出作用域的代码来模仿 <code>guard</code>，这的确可行，但是代码太难看了。</p>
+<pre><code><span class="class"><span class="keyword">enum</span> <span class="title">Result</span>&lt;<span class="title">T</span>&gt; </span>{
+    <span class="keyword">case</span> <span class="type">Value</span>(<span class="type">T</span>)
+    <span class="keyword">case</span> <span class="type">Error</span>(<span class="type">ErrorType</span>)
+
+    <span class="func"><span class="keyword">func</span> <span class="title">unwrap</span><span class="params">()</span></span> throws -&gt; <span class="type">T</span> {
+        <span class="keyword">if</span> <span class="keyword">case</span> .<span class="type">Value</span>(<span class="keyword">let</span> value) = <span class="keyword">self</span> {<span class="keyword">return</span> value}
+        throw <span class="string">"Unable to unwrap result"</span>
+    }
+
+    <span class="func"><span class="keyword">func</span> <span class="title">handleError</span><span class="params">(errorHandler: ErrorType -&gt; Void)</span></span> -&gt; <span class="type">Bool</span> {
+        <span class="keyword">if</span> <span class="keyword">case</span> .<span class="type">Error</span>(<span class="keyword">let</span> error) = <span class="keyword">self</span> {
+            errorHandler(error)
+            <span class="keyword">return</span> <span class="literal">true</span>
+        }
+        <span class="keyword">return</span> <span class="literal">false</span>
+    }
+}
+
+<span class="func"><span class="keyword">func</span> <span class="title">tryit</span><span class="generics">&lt;T&gt;</span><span class="params">(block: <span class="params">()</span></span></span> throws -&gt; <span class="type">T</span>) -&gt; <span class="type">Result</span>&lt;<span class="type">T</span>&gt; {
+    <span class="keyword">do</span> {
+        <span class="keyword">let</span> value = try block()
+        <span class="keyword">return</span> <span class="type">Result</span>.<span class="type">Value</span>(value)
+    } catch {<span class="keyword">return</span> <span class="type">Result</span>.<span class="type">Error</span>(error)}
+}
+</code></pre><p><del><code>let result = tryit{try myFailableCoinToss()}</code></del><br>    let result = tryit(myFailableCoinToss)</p>
+<pre><code>// guard error
+<span class="keyword">if</span> <span class="literal">result</span>.handleError({
+    error <span class="keyword">in</span>
+    print(<span class="string">"Error is \(error)"</span>)
+}) {fatalError()} // leave scope on <span class="literal">true</span>
+
+// force <span class="keyword">try</span> <span class="keyword">for</span> success <span class="keyword">case</span>
+<span class="keyword">let</span> unwrappedResult = <span class="keyword">try</span>! <span class="literal">result</span>.unwrap()
+
+// <span class="literal">result</span> <span class="keyword">is</span> now usable at top level scope
+print(<span class="string">"Result is \(unwrappedResult)"</span>)
+</code></pre><p>这还有另外一种更像 <code>try?</code> 的方式，但是需要打印了所有产生的错误信息。</p>
+<pre><code><span class="func"><span class="keyword">func</span> <span class="title">tryit</span><span class="generics">&lt;T&gt;</span><span class="params">(block: <span class="params">()</span></span></span> throws -&gt; <span class="type">T</span>) -&gt; <span class="type">Optional</span>&lt;<span class="type">T</span>&gt;{
+    <span class="keyword">do</span> {
+        <span class="keyword">return</span> try block()
+    } catch {
+        <span class="built_in">print</span>(error)
+        <span class="keyword">return</span> <span class="literal">nil</span>
+    }
+}
+</code></pre><p>这种替代 <code>try?</code> 的方法不仅拥有了 <code>if-let</code> 和 <code>guard</code> 的语句特性，还能返回错误。你可以用之前<code>Result</code>调用的方式使用它：</p>
+<p><del><code>let result = tryit{try myFailableCoinToss()}</code></del><br><code>let result = tryit(myFailableCoinToss)</code></p>
+<p>你仍然不能基于错误类型和错误细节来制定错误处理策略，但是这种实现方式也不像 <code>try?</code> 那样把错误信息完全丢弃掉了。</p>
+<p>你也可以修改<code>tryit</code>函数，让它也能接受做错误处理的<code>block</code>，但因为会有两个闭包，这个函数就会变得相当臃肿。我尝试过几种不同的实现方式，但都做的不太好，就不在这分享出来了。最大的问题是，就算你把做错误处理的<code>block</code>传给<code>tryit</code>了，你也不能像 <code>guard</code>语句那样退出作用域，而且也没有这样的<code>guard</code>的替代形式能接受<code>try?</code>的错误来作退出作用域<code>block</code>的参数。</p>
+<p>我觉得我最后实现的应该类似于下面的这种形式，在顶层作用域中执行条件赋值，并采用  <code>guard</code> 语句的方式来替代普通的 <code>try</code>：</p>
+<pre><code>guard <span class="keyword">let</span> <span class="literal">result</span> = <span class="keyword">try</span>!! myFailableCoinToss() <span class="keyword">else</span> {error <span class="keyword">in</span> ...}
+</code></pre><p>之所以这么做是因为我们想知道我们的程序到底会不会出错，如果不出错的话，直接就能得到返回值了。</p>
+<pre><code><span class="keyword">let</span> <span class="literal">result</span> = <span class="keyword">try</span> myFailableCoinToss()
+</code></pre><p>在当前的状态下，如果要用 <code>try</code> （而且又需要进行错误处理的话），你就必须得用 <code>do-catch</code> 或者像<code>Result</code>枚举之类的变通方法。</p>
+<p>非常感谢<a href="http://mikeash.com/" target="_blank" rel="external">Mike Ash</a>的帮忙！</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Erica-Sadun/">Erica Sadun</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Swift-进阶/">Swift 进阶</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/10/13/alternatives-to-try-swiftlang/" data-title="try? 的替代实现 | Hexo" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/10/20/swift-pattern-matching/" title="Swift中的模式匹配">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Swift中的模式匹配</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/09/28/thinking-in-swift-1/"  title="Swift 编程思想，第一部分：拯救小马">
+ <strong>NEXT:</strong><br/> 
+ <span>Swift 编程思想，第一部分：拯救小马
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+  
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分類</p>
+		<ul>
+		
+			<li><a href="/categories/3D-Touch/" title="3D Touch">3D Touch<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Swift/" title="Swift">Swift<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Swift-进阶/" title="Swift 进阶">Swift 进阶<sup>6</sup></a></li>
+		
+			<li><a href="/categories/Swift-入门/WatchOS-2/" title="WatchOS 2">WatchOS 2<sup>2</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/APPVENTURE/" title="APPVENTURE">APPVENTURE<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Crunchy-Development/" title="Crunchy Development">Crunchy Development<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Erica-Sadun/" title="Erica Sadun">Erica Sadun<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Jameson-Quave/" title="Jameson Quave">Jameson Quave<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Natasha-The-Robot/" title="Natasha The Robot">Natasha The Robot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Ole-Begemann/" title="Ole Begemann">Ole Begemann<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Raj-Kandathi/" title="Raj Kandathi">Raj Kandathi<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swift/" title="Swift">Swift<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thomas-Hanning/" title="Thomas Hanning">Thomas Hanning<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Tomasz-Szulc/" title="Tomasz Szulc">Tomasz Szulc<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ericasadun/" title="ericasadun">ericasadun<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="[object Object]">[object Object]</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

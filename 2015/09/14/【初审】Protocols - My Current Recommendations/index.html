@@ -1,0 +1,389 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="[object Object]">
+    
+    <meta name="description" content="title: “协议-我当前的推荐”date: 2015-8-21tags: [Swift]categories: [Swift]permalink: protocols-my-current-recommendations
+#协议-我当前的推荐#
+原文链接：Protocols - My Current Recommendations
+最近Swift的热点都围绕在协议上。他们觉得任何东西都应该是协议。理论上挺好的，但是事实上，这种观点会产生一些不好的副作用。">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="Hexo" title="Hexo"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Hexo">Hexo</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/09/14/【初审】Protocols - My Current Recommendations/" title="" itemprop="url"></a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="[object Object]">[object Object]</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-09-14T09:38:12.875Z" itemprop="datePublished">2015-09-14</time>
+    更新日期:<time datetime="2015-08-21T06:32:41.186Z" itemprop="dateModified">2015-08-21</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		
+		</div>
+		
+		<p>title: “协议-我当前的推荐”<br>date: 2015-8-21<br>tags: [Swift]<br>categories: [Swift]<br>permalink: protocols-my-current-recommendations</p>
+<p>#协议-我当前的推荐#</p>
+<p>原文链接：<a href="http://owensd.io/2015/08/06/protocols.html?utm_campaign=Swift%2BSandbox&amp;utm_medium=web&amp;utm_source=Swift_Sandbox_2" target="_blank" rel="external">Protocols - My Current Recommendations</a></p>
+<p>最近Swift的热点都围绕在协议上。他们觉得任何东西都应该是协议。理论上挺好的，但是事实上，这种观点会产生一些不好的副作用。</p>
+<a id="more"></a>
+<p>当我在代码中使用协议时，我总是把以下两件重要的事情记在脑子里：</p>
+<p>##1.不要把协议当成类型##</p>
+<p>许多我看到的（和我起初做的）方法是在继承关系里把协议当成一个基类。我不认为这是协议真正闪光的地方。这种设计模式仍然把思考问题停留在“面向对象”的方式上。  </p>
+<p>换句话说，你该扪心自问是否真的有必要使用协议，假如你的协议只是在继承关系里是有意义的。我不认为这样回答是一个好的理由：“我想要我的类型是结构体，所以我需要用协议来代替。”如果真的需要这样的，那就分解它，把它变得更适用。  </p>
+<p>进一步的验证可见：<a href="http://swiftdoc.org/swift-2/" target="_blank" rel="external">http://swiftdoc.org/swift-2/</a>。需要关注所有那些协议（不以 <code>_</code> 开头的协议）吗？所有的协议都能适用不同的类型，不管是不是类型继承。  </p>
+<p>##2.不要把协议泛型化，除非你必须这么做！##</p>
+<p>但愿这只是个时间点问题，但是你一把协议泛型化，你就失去了拥有协议中实例类型化集合的能力。我认为这是严重的设计缺陷。例如，协议中所有不是self修饰的功能都应该在任何想要使用的地方被安全调用。  </p>
+<p>这也使你的协议适用于泛型化协议，比如 <code>Equatable</code> 。泛型是有感染力的。  </p>
+<p>可以这样写：  </p>
+<pre><code><span class="class"><span class="keyword">protocol</span> <span class="title">Foo</span> : <span class="title">Equatable</span> </span>{} 
+</code></pre><p>写完这行代码，可能会引起你淡淡的忧伤。  </p>
+<p>来个实际点的例子吧：  </p>
+<p>我们想要对HTTP response建模，并且想要支持两种不同的response类型：String和JSON。  </p>
+<p>你可能会这样写：  </p>
+<pre><code><span class="class"><span class="keyword">class</span> <span class="title">HTTPResponse</span><span class="inheritance">&lt;<span class="parent">ResponseType</span></span>&gt; {</span>
+    var <span class="symbol">response:</span> <span class="constant">ResponseType</span>
+    init(<span class="symbol">response:</span> <span class="constant">ResponseType</span>) { <span class="keyword">self</span>.response = response }
+}
+</code></pre><p>我认为这样写不好。一旦这样写，我们就人为地限制了使用这个类型的能力；比如，这不能在复杂情况下的集合里使用。现在，为什么我想要在集合里使用有不同的 <code>ResponseType</code> 来呈现？假设，我想要构建一个response/request的测试工具。返回response的集合里需要有我支持的类型：String和JSON。  </p>
+<p>简单的使用 <code>AnyObject</code> 是个不错的做法。虽然可行，但是真的很操蛋。  </p>
+<p>另一种方法是使用协议。然而，除了构建 <code>ResponseType</code> 协议之外，让我们想想我们真正想要什么。我真正关心的是， <code>HTTPResponse</code> 接收到的 <code>ResponseType</code> 都能表示成 <code>String</code> 。  </p>
+<p>揣着这样的想法，写下代码如下：</p>
+<pre><code><span class="class"><span class="keyword">protocol</span> <span class="title">StringRepresentable</span> </span>{
+    <span class="keyword">var</span> stringRepresentation: <span class="type">String</span> { <span class="keyword">get</span> }
+}
+
+<span class="class"><span class="keyword">class</span> <span class="title">HTTPResponse</span> </span>{
+    <span class="keyword">var</span> response: <span class="type">StringRepresentable</span>
+    <span class="keyword">init</span>(response: <span class="type">StringRepresentable</span>) { <span class="keyword">self</span>.response = response }
+}
+</code></pre><p>对我而言，这为API使用者提供了极大的方便，也维持了类型的明确性。</p>
+<p>当然，这与其自身是有弊端的，我会指出这疏忽的一点。假如你真的需要为response使用特定的类型，那么就需要对它进行转型。</p>
+<pre><code><span class="keyword">class</span> <span class="title">JSONResponse</span> : <span class="title">StringRepresentable</span> {
+    <span class="keyword">var</span> stringRepresentation: String = <span class="string">"{}"</span>
+}
+
+<span class="keyword">let</span> http = HTTPResponse(response: JSONResponse())
+<span class="keyword">let</span> json = http.response <span class="keyword">as</span>? JSONResponse
+</code></pre><blockquote>
+<p><em>这个方法明显更好。调用者知道可能的返回类型或返回值。这明显与遍历整个集合取出返回值是不同的，因为，代码的消费者可能使用的是其他的返回类型，比如 <code>XMLResponse</code> ，而我们的代码不可能知道这个。</em></p>
+</blockquote>
+<p>最好是这样子来写：  </p>
+<pre><code><span class="class"><span class="keyword">class</span> <span class="title">HTTPResponse</span>&lt;<span class="type">ResponseType : StringRepresentable</span>&gt; </span>{
+    <span class="variable"><span class="keyword">var</span> response</span>: ResponseType
+}
+
+let responses = [json, string]  <span class="comment">// responses变量是以HTTPResponse为元素的数组，元素中的ResponseType是未指定的</span>
+</code></pre><p>如果要用集合，你还是需要强制转换response的类型，不过现在你可以直接用 <code>json</code> 实例来验证类型。</p>
+<p>反正我是每次都用 <code>[HTTPResponse]</code> 的集合类型，而不是 <code>[AnyObject]</code> 。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/09/14/【初审】Protocols - My Current Recommendations/" data-title="Hexo" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/09/14/[已审待定稿]Swift-什么时候使用结构体和类/" title="">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  (no title)</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/09/12/operator-overloading-custom-operators-in-swift/"  title="Swift中的重载运算符和自定义运算符">
+ <strong>NEXT:</strong><br/> 
+ <span>Swift中的重载运算符和自定义运算符
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+  
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分類</p>
+		<ul>
+		
+			<li><a href="/categories/3D-Touch/" title="3D Touch">3D Touch<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Swift/" title="Swift">Swift<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Swift-进阶/" title="Swift 进阶">Swift 进阶<sup>6</sup></a></li>
+		
+			<li><a href="/categories/Swift-入门/WatchOS-2/" title="WatchOS 2">WatchOS 2<sup>2</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/APPVENTURE/" title="APPVENTURE">APPVENTURE<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Crunchy-Development/" title="Crunchy Development">Crunchy Development<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Erica-Sadun/" title="Erica Sadun">Erica Sadun<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Jameson-Quave/" title="Jameson Quave">Jameson Quave<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Natasha-The-Robot/" title="Natasha The Robot">Natasha The Robot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Ole-Begemann/" title="Ole Begemann">Ole Begemann<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Raj-Kandathi/" title="Raj Kandathi">Raj Kandathi<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swift/" title="Swift">Swift<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thomas-Hanning/" title="Thomas Hanning">Thomas Hanning<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Tomasz-Szulc/" title="Tomasz Szulc">Tomasz Szulc<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ericasadun/" title="ericasadun">ericasadun<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="[object Object]">[object Object]</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

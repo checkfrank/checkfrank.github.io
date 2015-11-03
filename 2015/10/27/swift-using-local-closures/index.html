@@ -1,0 +1,357 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Swift：使用本地闭包 | Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="[object Object]">
+    
+    <meta name="description" content="原文链接=http://www.thomashanning.com/swift-using-local-closures/作者=Thomas Hanning原文日期=2015/10/22译者=小锅校对=千叶知风定稿=
+&lt;!--此处开始正文--&gt;
+闭包一般是用来作为函数的参数。不过某些情况下，使用本地闭包也是十分方便的。
+假设有一个 ViewController，里面包含了两种 GUI 模式：
+1234enum GUIMode &amp;#123;	case Mode1	case Mode2&amp;#125;">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="Hexo" title="Hexo"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Hexo">Hexo</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/10/27/swift-using-local-closures/" title="Swift：使用本地闭包" itemprop="url">Swift：使用本地闭包</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="[object Object]">[object Object]</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-10-27T04:40:53.943Z" itemprop="datePublished">2015-10-27</time>
+    更新日期:<time datetime="2015-10-27T04:39:18.793Z" itemprop="dateModified">2015-10-27</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		
+		</div>
+		
+		<p>原文链接=<a href="http://www.thomashanning.com/swift-using-local-closures/" target="_blank" rel="external">http://www.thomashanning.com/swift-using-local-closures/</a><br>作者=Thomas Hanning<br>原文日期=2015/10/22<br>译者=小锅<br>校对=千叶知风<br>定稿=</p>
+<!--此处开始正文-->
+<p>闭包一般是用来作为函数的参数。不过某些情况下，使用本地闭包也是十分方便的。</p>
+<p>假设有一个 <code>ViewController</code>，里面包含了两种 GUI 模式：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">GUIMode</span> </span>&#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="type">Mode1</span></span><br><span class="line">	<span class="keyword">case</span> <span class="type">Mode2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>对于每一种 GUI 模式，我们都需要对三个 label 设置某些属性：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> guiMode: <span class="type">GUIMode</span> = .<span class="type">Mode1</span> &#123;</span><br><span class="line">    <span class="keyword">didSet</span> &#123;              </span><br><span class="line">        <span class="keyword">switch</span> guiMode &#123;</span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Mode1</span>:</span><br><span class="line">            label1.text = <span class="string">"1"</span></span><br><span class="line">            label1.textColor = <span class="type">UIColor</span>.redColor()</span><br><span class="line">            label1.font = <span class="type">UIFont</span>(name: <span class="string">"HelveticaNeue"</span>, size: <span class="number">10</span>)</span><br><span class="line">                </span><br><span class="line">            label2.text = <span class="string">"2"</span></span><br><span class="line">            label2.textColor = <span class="type">UIColor</span>.blueColor()</span><br><span class="line">            label2.font = <span class="type">UIFont</span>(name: <span class="string">"HelveticaNeue"</span>, size: <span class="number">12</span>)</span><br><span class="line">                </span><br><span class="line">            label3.text = <span class="string">"3"</span></span><br><span class="line">            label3.textColor = <span class="type">UIColor</span>.yellowColor()</span><br><span class="line">            label3.font = <span class="type">UIFont</span>(name: <span class="string">"HelveticaNeue"</span>, size: <span class="number">11</span>)</span><br><span class="line">                </span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Mode2</span>:</span><br><span class="line">            label1.text = <span class="string">"4"</span></span><br><span class="line">            label1.textColor = <span class="type">UIColor</span>.yellowColor()</span><br><span class="line">            label1.font = <span class="type">UIFont</span>(name: <span class="string">"HelveticaNeue"</span>, size: <span class="number">11</span>)</span><br><span class="line">                </span><br><span class="line">            label2.text = <span class="string">"5"</span></span><br><span class="line">            label2.textColor = <span class="type">UIColor</span>.blueColor()</span><br><span class="line">            label2.font = <span class="type">UIFont</span>(name: <span class="string">"HelveticaNeue"</span>, size: <span class="number">9</span>)</span><br><span class="line">                </span><br><span class="line">            label3.text = <span class="string">"6"</span></span><br><span class="line">            label3.textColor = <span class="type">UIColor</span>.brownColor()</span><br><span class="line">            label3.font = <span class="type">UIFont</span>(name: <span class="string">"HelveticaNeue"</span>, size: <span class="number">10</span>)</span><br><span class="line">        &#125;           </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里有很多重复的代码。你可以创建一个函数，在函数里对一个 label 的属性进行设置，但是这个函数我们基本不会在别的地方再次使用。因此，在这种情况下使用闭包就是一个相当不错的解决方案：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> guiMode: <span class="type">GUIMode</span> = .<span class="type">Mode1</span> &#123;</span><br><span class="line">    <span class="keyword">didSet</span> &#123;      </span><br><span class="line">        <span class="keyword">let</span> styleLabel: (label:<span class="type">UILabel</span>,text:<span class="type">String</span>,color:<span class="type">UIColor</span>,size:<span class="type">CGFloat</span>) -&gt; () = &#123; (label,text,color,size) <span class="keyword">in</span></span><br><span class="line">            label.text = text</span><br><span class="line">            label.textColor = color</span><br><span class="line">            label.font = <span class="type">UIFont</span>(name: <span class="string">"HelveticaNeue"</span>, size:size)</span><br><span class="line">        &#125;</span><br><span class="line">                        </span><br><span class="line">        <span class="keyword">switch</span> guiMode &#123;</span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Mode1</span>:</span><br><span class="line">            styleLabel(label: label1, text: <span class="string">"1"</span>, color: <span class="type">UIColor</span>.redColor(), size:<span class="number">10</span>)</span><br><span class="line">            styleLabel(label: label2, text: <span class="string">"2"</span>, color: <span class="type">UIColor</span>.blueColor(), size:<span class="number">12</span>)</span><br><span class="line">            styleLabel(label: label3, text: <span class="string">"3"</span>, color: <span class="type">UIColor</span>.yellowColor(), size:<span class="number">11</span>)</span><br><span class="line">        <span class="keyword">case</span> .<span class="type">Mode2</span>:</span><br><span class="line">            styleLabel(label: label1, text: <span class="string">"4"</span>, color: <span class="type">UIColor</span>.yellowColor(), size:<span class="number">11</span>)</span><br><span class="line">            styleLabel(label: label2, text: <span class="string">"5"</span>, color: <span class="type">UIColor</span>.blackColor(), size:<span class="number">9</span>)</span><br><span class="line">            styleLabel(label: label3, text: <span class="string">"6"</span>, color: <span class="type">UIColor</span>.brownColor(), size:<span class="number">10</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样一来，代码就少了很多，看起来也更加简洁了。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Thomas-Hanning/">Thomas Hanning</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Swift-入门/">Swift 入门</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/10/27/swift-using-local-closures/" data-title="Swift：使用本地闭包 | Hexo" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/10/29/3d-touch-impressions-and-thoughts/" title="3D Touch之我见">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  3D Touch之我见</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/10/27/swift-pattern-matching-in-detail/"  title="详解 Swift 模式匹配">
+ <strong>NEXT:</strong><br/> 
+ <span>详解 Swift 模式匹配
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+  
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分類</p>
+		<ul>
+		
+			<li><a href="/categories/3D-Touch/" title="3D Touch">3D Touch<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Swift/" title="Swift">Swift<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>4</sup></a></li>
+		
+			<li><a href="/categories/Swift-进阶/" title="Swift 进阶">Swift 进阶<sup>6</sup></a></li>
+		
+			<li><a href="/categories/Swift-入门/WatchOS-2/" title="WatchOS 2">WatchOS 2<sup>2</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/APPVENTURE/" title="APPVENTURE">APPVENTURE<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Crunchy-Development/" title="Crunchy Development">Crunchy Development<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Erica-Sadun/" title="Erica Sadun">Erica Sadun<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Jameson-Quave/" title="Jameson Quave">Jameson Quave<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Natasha-The-Robot/" title="Natasha The Robot">Natasha The Robot<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Ole-Begemann/" title="Ole Begemann">Ole Begemann<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Raj-Kandathi/" title="Raj Kandathi">Raj Kandathi<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swift/" title="Swift">Swift<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thomas-Hanning/" title="Thomas Hanning">Thomas Hanning<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Tomasz-Szulc/" title="Tomasz Szulc">Tomasz Szulc<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ericasadun/" title="ericasadun">ericasadun<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="[object Object]">[object Object]</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>
