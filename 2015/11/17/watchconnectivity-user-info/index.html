@@ -1,0 +1,401 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>WatchConnectivity：通过用户信息共享所有数据 | Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="[object Object]">
+    
+    <meta name="description" content="原文链接=http://natashatherobot.com/watchconnectivity-user-info/作者=Natasha The Robot原文日期=2015/10/21译者=小袋子校对=千叶知风定稿=发布时间=
+&lt;!--此处开始正文--&gt;
+在看这篇文章之前，确认你已经看过之前发布的几篇 WatchOS 2 的文章：
+
+WatchOS 2: Hello, World(译文链接)
+WatchConnectivity Introduction: Say Goodbye To The Spinner(译文链接)
+WatchConnectivity: Say Hello to WCSession(译文链接)
+
+通过 User Info 实现后台数据传输应该在你确保所有数据被传输的情况下（不仅仅像Application Context）。用户信息数据是在FIFO（先进先出）队列中排队传输的，所以不会有东西被重写。">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="Hexo" title="Hexo"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Hexo">Hexo</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/17/watchconnectivity-user-info/" title="WatchConnectivity：通过用户信息共享所有数据" itemprop="url">WatchConnectivity：通过用户信息共享所有数据</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="[object Object]">[object Object]</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-11-17T05:46:56.945Z" itemprop="datePublished">2015-11-17</time>
+    更新日期:<time datetime="2015-11-17T05:46:17.143Z" itemprop="dateModified">2015-11-17</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#免责声明"><span class="toc-number">1.</span> <span class="toc-text">免责声明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#步骤"><span class="toc-number">2.</span> <span class="toc-text">步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发送数据"><span class="toc-number">3.</span> <span class="toc-text">发送数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接收数据"><span class="toc-number">4.</span> <span class="toc-text">接收数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更新数据"><span class="toc-number">5.</span> <span class="toc-text">更新数据</span></a></li></ol>
+		</div>
+		
+		<p>原文链接=<a href="http://natashatherobot.com/watchconnectivity-user-info/" target="_blank" rel="external">http://natashatherobot.com/watchconnectivity-user-info/</a><br>作者=Natasha The Robot<br>原文日期=2015/10/21<br>译者=小袋子<br>校对=千叶知风<br>定稿=<br>发布时间=</p>
+<!--此处开始正文-->
+<p>在看这篇文章之前，确认你已经看过之前发布的几篇 WatchOS 2 的文章：</p>
+<ul>
+<li><a href="http://natashatherobot.com/watchos-2-hello-world/" target="_blank" rel="external">WatchOS 2: Hello, World</a>(<a href="http://swift.gg/2015/10/15/watchos-2-hello-world/" target="_blank" rel="external">译文链接</a>)</li>
+<li><a href="http://natashatherobot.com/watchconnectivity-introduction-say-goodbye-to-the-spinner/" target="_blank" rel="external">WatchConnectivity Introduction: Say Goodbye To The Spinner</a>(<a href="http://swift.gg/2015/11/03/watchconnectivity-introduction-say-goodbye-to-the-spinner/" target="_blank" rel="external">译文链接</a>)</li>
+<li><a href="http://natashatherobot.com/watchconnectivity-say-hello-to-wcsession/" target="_blank" rel="external">WatchConnectivity: Say Hello to WCSession</a>(<a href="http://swift.gg/2015/11/02/watchconnectivity-say-hello-to-wcsession/" target="_blank" rel="external">译文链接</a>)</li>
+</ul>
+<p>通过 User Info 实现后台数据传输应该在你确保所有数据被传输的情况下（不仅仅像<a href="http://natashatherobot.com/watchconnectivity-application-context/" target="_blank" rel="external">Application Context</a>）。用户信息数据是在FIFO（先进先出）队列中排队传输的，所以不会有东西被重写。<br><a id="more"></a><br>一个典型的例子是在一个短信应用中使用它 —— 最后一条信息是确保能看到完整对话和上下文的重要部分。亦或者如果用户更新了他们文件信息的一小部分，则他们的个人信息和所有的修改应该被同步到 Watch 文件。</p>
+<p>在这个教程中，我将会构建一个食物 emoji （表情符号）的社交应用，因为我是个吃货，并且我喜欢🍦！</p>
+<p>另外，这个应用可以成为一个基于食品杂货店展示的 Apple Watch 应用 —— 你在手机上选择打算购买的食物 emoji ，然后跳转到应用上，这样你就好像在食品杂货店上浏览商品了！</p>
+<p><img src="http://natashatherobot.com/wp-content/uploads/Screen-Shot-2015-10-21-at-5.16.42-AM.png" alt=""></p>
+<h2 id="免责声明">免责声明</h2><p>对于这个应用需要知道的是，我将会写很多抽象的数据更新层用于整个应用，因为 UI 中的多个地方需要有数据源更新，所以在示例应用中将会过度设计。</p>
+<p>我同样尝试了不同的架构，尤其是 Swift 中的，所以如果你有任何有关于在Swift中更好地抽象数据层的建议反馈，请在评论中提出。</p>
+<h2 id="步骤">步骤</h2><p>在这个教程中，我假设你已经知道如何在<strong> Xcode 创建一个简单的单视图应用</strong>，以及创建一个简单的<strong>食物 Emoji 列表的表视图</strong>。如果你遇到任何问题，可以参考这个 <a href="https://github.com/NatashaTheRobot/WatchConnectivityUserInfoDemo/blob/master/WCUserInfoDemo/FoodSelectionViewController.swift" target="_blank" rel="external">FoodSelectionViewController</a> 。</p>
+<p>同样地，我也假设你知道如何<strong>创建一个 Watch 应用并且在 Interface.storyboard 中做过基本的样式</strong>。如果你需要帮助，请查看<a href="http://natashatherobot.com/watchos-2-hello-world/" target="_blank" rel="external">WatchOS 2: Hello, World tutorial</a> 和 <a href="http://natashatherobot.com/watchkit-create-table/" target="_blank" rel="external">WatchKit: Let’s Create a Table tutorial</a>.</p>
+<p>最后，你需要会创建基础的用于管理 <code>WCSession</code> 的单例，以及在 <code>AppleDelegate</code> 中的<code>application:didFinishLaunchingWithOptions</code>和在Watch 扩展中<code>ExtensionDelegate</code> 的<code>applicationDidFinishLaunching</code>中启动它。如果不会的话，请查看 <a href="http://natashatherobot.com/watchconnectivity-say-hello-to-wcsession/" target="_blank" rel="external">WatchConnectivity: Say Hello to WCSession tutorial</a>。</p>
+<p>你的 iOS 应用看起来应该像这样：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// in your iOS app</span></span><br><span class="line"><span class="keyword">import</span> WatchConnectivity</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WatchSessionManager</span>: <span class="title">NSObject</span>, <span class="title">WCSessionDelegate</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">let</span> sharedManager = <span class="type">WatchSessionManager</span>()</span><br><span class="line">    private <span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    private <span class="keyword">let</span> session: <span class="type">WCSession</span>? = <span class="type">WCSession</span>.isSupported() ? <span class="type">WCSession</span>.defaultSession() : <span class="literal">nil</span></span><br><span class="line">    </span><br><span class="line">    private <span class="keyword">var</span> validSession: <span class="type">WCSession</span>? &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// paired - the user has to have their device paired to the watch</span></span><br><span class="line">        <span class="comment">// watchAppInstalled - the user must have your watch app installed</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// Note: if the device is paired, but your watch app is not installed</span></span><br><span class="line">        <span class="comment">// consider prompting the user to install it for a better experience</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> session = session <span class="keyword">where</span> session.paired &amp;&amp; session.watchAppInstalled &#123;</span><br><span class="line">            <span class="keyword">return</span> session</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">startSession</span><span class="params">()</span></span> &#123;</span><br><span class="line">        session?.delegate = <span class="keyword">self</span></span><br><span class="line">        session?.activateSession()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>和在 Watch 应用中这样的代码：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// in your WatchKit Extension</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> WatchConnectivity</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WatchSessionManager</span>: <span class="title">NSObject</span>, <span class="title">WCSessionDelegate</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">let</span> sharedManager = <span class="type">WatchSessionManager</span>()</span><br><span class="line">    private <span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">        <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    private <span class="keyword">let</span> session: <span class="type">WCSession</span> = <span class="type">WCSession</span>.defaultSession()</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">startSession</span><span class="params">()</span></span> &#123;</span><br><span class="line">        session.delegate = <span class="keyword">self</span></span><br><span class="line">        session.activateSession()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然，如果你需要额外的提示，你可以参考这个 <a href="https://github.com/NatashaTheRobot/WatchConnectivityUserInfoDemo" target="_blank" rel="external">教程的源码</a>。</p>
+<p>现在让我们开始有趣的部分吧 🚀。</p>
+<h2 id="发送数据">发送数据</h2><p>在我的应用中，每当用户选择一个食物项，都需要在后台传输给 Watch 应用。这意味着<strong> iOS 应用是发送者</strong>。显然这是非常简单的。</p>
+<p>只需扩展iOS应用的 WatchSessionManager 单例去传输用户数据：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// in your iOS app</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// MARK: User Info</span></span><br><span class="line"><span class="comment">// use when your app needs all the data</span></span><br><span class="line"><span class="comment">// FIFO queue</span></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">WatchSessionManager</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Sender</span></span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">transferUserInfo</span><span class="params">(userInfo: [String : AnyObject])</span></span> -&gt; <span class="type">WCSessionUserInfoTransfer</span>? &#123;</span><br><span class="line">        <span class="keyword">return</span> validSession?.transferUserInfo(userInfo)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以现在，当用户选择一个食物的 cell ，你只需简单地调用以下的方法：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// FoodSelectionViewController.swift</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FoodSelectionViewController</span>: <span class="title">UITableViewController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    private <span class="keyword">let</span> food = [<span class="string">"🍦"</span>, <span class="string">"🍮"</span>, <span class="string">"🍤"</span>,<span class="string">"🍉"</span>, <span class="string">"🍨"</span>, <span class="string">"🍏"</span>, <span class="string">"🍌"</span>, <span class="string">"🍰"</span>, <span class="string">"🍚"</span>, <span class="string">"🍓"</span>, <span class="string">"🍪"</span>, <span class="string">"🍕"</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Table Data Source methods truncated</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// MARK: Table view delegate</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> foodItem = food[indexPath.row]</span><br><span class="line">        <span class="type">WatchSessionManager</span>.sharedManager.transferUserInfo([<span class="string">"foodItem"</span> : foodItem])</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就是酱紫！已选择的食物项就在 FIFO 队列中了，并且将会发送给 Watch 应用 ！</p>
+<h2 id="接收数据">接收数据</h2><p><strong>现在 Watch 应用必须接收数据</strong>。这也是很简单的。只需要实现<code>WCSessionDelegate</code>中的<code>session:didReceiveUserInfo:</code>方法。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// in your WatchKit Extension</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// MARK: User Info</span></span><br><span class="line"><span class="comment">// use when your app needs all the data</span></span><br><span class="line"><span class="comment">// FIFO queue</span></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">WatchSessionManager</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Receiver</span></span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">session</span><span class="params">(session: WCSession, didReceiveUserInfo userInfo: [String : AnyObject])</span></span> &#123;</span><br><span class="line">        <span class="comment">// handle receiving user info</span></span><br><span class="line">        <span class="comment">// this will be filled in in the Updating Data section below</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="更新数据">更新数据</h2><p>现在你接收到了数据，让我们开始最棘手的部分吧。尝试去更新你的 Watch 扩展的 <code>InterfaceController</code> 以及其他视图或者数据源。一个方式是通过 <code>NSNotificationCenter</code>，但是我将会尝试用不同的方法。这个部分可以用多种方法来做，并且对于应用来说有点过度设计，因此要记清楚这个。</p>
+<p>既然我们用 Swift，我的目标是尽快地去改变值类型模型。不幸的是，正如我在 <code>WCSession</code> 中所提到的，<code>WCSessionDelegate</code>只能在一个<code>NSObject</code> 中实现。为了减轻这个，我创建了一个可以携带用户信息数据的 <code>DataSource</code> 值，并将其转换成多个不变和可用的 <code>InterfaceControllers</code>（这句话有些问题请定稿的再修补下）。因为用户信息是在一个 FIFO 队列顺序接收的，<code>DataSource</code> 应该持续追踪在队列中接收的数据。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">   <span class="comment">// in your WatchKit Extension</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">DataSource</span> </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> items: [<span class="type">Item</span>]</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">Item</span> </span>&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">Food</span>(<span class="type">String</span>)</span><br><span class="line">        <span class="keyword">case</span> <span class="type">Unknown</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">init</span>(items: [<span class="type">Item</span>] = [<span class="type">Item</span>]()) &#123;</span><br><span class="line">        <span class="keyword">self</span>.items = items</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">insertItemFromData</span><span class="params">(data: [String : AnyObject])</span></span> -&gt; <span class="type">DataSource</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> updatedItems: [<span class="type">Item</span>]</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> foodItem = data[<span class="string">"foodItem"</span>] <span class="keyword">as</span>? <span class="type">String</span> &#123;</span><br><span class="line">            updatedItems = [.<span class="type">Food</span>(foodItem)] + items</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            updatedItems = [.<span class="type">Unknown</span>] + items</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="type">DataSource</span>(items: updatedItems)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我可以现在设置一个 protocol ，通过更新的数据源更新所有需要知道数据改变的部分：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// in your WatchKit Extension</span></span><br><span class="line"><span class="comment">//  WatchSessionManager.swift</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">DataSourceChangedDelegate</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">dataSourceDidUpdate</span><span class="params">(dataSource: DataSource)</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在让我们进入有趣的部分！你的<code>WatchSessionManager</code>将需要以某种方式去追踪所有的<code>dataSourceChangedDelegates</code>。这可以通过一个数组以及一个可以添加和删除数组中的delegate方法来实现。<code>WatchSessionManager</code>还需要持续追踪最近的<code>DataSource</code>拷贝，这样就可以使用<code>DataSource</code>中的数据去创建一个带有最新数据的新 <code>DataSource</code>：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// in your WatchKit Extension</span></span><br><span class="line">   <span class="comment">//  WatchSessionManager.swift</span></span><br><span class="line">   </span><br><span class="line">   <span class="class"><span class="keyword">class</span> <span class="title">WatchSessionManager</span>: <span class="title">NSObject</span>, <span class="title">WCSessionDelegate</span> </span>&#123;</span><br><span class="line">   <span class="keyword">static</span> <span class="keyword">let</span> sharedManager = <span class="type">WatchSessionManager</span>()</span><br><span class="line">   private <span class="keyword">override</span> <span class="keyword">init</span>() &#123;</span><br><span class="line">       <span class="keyword">super</span>.<span class="keyword">init</span>()</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   private <span class="keyword">let</span> session: <span class="type">WCSession</span> = <span class="type">WCSession</span>.defaultSession()</span><br><span class="line">   </span><br><span class="line">   private <span class="keyword">var</span> dataSource = <span class="type">DataSource</span>()</span><br><span class="line">   private <span class="keyword">var</span> dataSourceChangedDelegates = [<span class="type">DataSourceChangedDelegate</span>]()</span><br><span class="line">   </span><br><span class="line">   <span class="func"><span class="keyword">func</span> <span class="title">startSession</span><span class="params">()</span></span> &#123;</span><br><span class="line">       session.delegate = <span class="keyword">self</span></span><br><span class="line">       session.activateSession()</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   <span class="func"><span class="keyword">func</span> <span class="title">addDataSourceChangedDelegate</span><span class="params">(delegate: T)</span></span> &#123;</span><br><span class="line">       dataSourceChangedDelegates.append(delegate)</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   <span class="func"><span class="keyword">func</span> <span class="title">removeDataSourceChangedDelegate</span><span class="params">(delegate: T)</span></span> &#123;</span><br><span class="line">       <span class="keyword">for</span> (index, dataSourceDelegate) <span class="keyword">in</span> dataSourceChangedDelegates.<span class="built_in">enumerate</span>() &#123;</span><br><span class="line">           <span class="keyword">if</span> <span class="keyword">let</span> dataSourceDelegate = dataSourceDelegate <span class="keyword">as</span>? <span class="type">T</span> <span class="keyword">where</span> dataSourceDelegate == delegate &#123;</span><br><span class="line">               dataSourceChangedDelegates.removeAtIndex(index)</span><br><span class="line">               <span class="keyword">break</span></span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>当用户信息接收到后我们可以添加实现了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// in your WatchKit Extension</span></span><br><span class="line">    <span class="comment">//  WatchSessionManager.swift</span></span><br><span class="line">    <span class="comment">// MARK: User Info</span></span><br><span class="line">    <span class="comment">// use when your app needs all the data</span></span><br><span class="line">    <span class="comment">// FIFO queue</span></span><br><span class="line">    <span class="class"><span class="keyword">extension</span> <span class="title">WatchSessionManager</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Receiver</span></span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">session</span><span class="params">(session: WCSession, didReceiveUserInfo userInfo: [String : AnyObject])</span></span> &#123;</span><br><span class="line">        <span class="comment">// handle receiving user info</span></span><br><span class="line">        dispatch_async(dispatch_get_main_queue()) &#123; [<span class="keyword">weak</span> <span class="keyword">self</span>] <span class="keyword">in</span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> dataSource = <span class="keyword">self</span>?.dataSource.insertItemFromData(userInfo) &#123;</span><br><span class="line">                <span class="keyword">self</span>?.dataSource = dataSource</span><br><span class="line">                <span class="keyword">self</span>?.dataSourceChangedDelegates.forEach &#123;</span><br><span class="line">                    $<span class="number">0</span>.dataSourceDidUpdate(dataSource)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在我们只需要确保我们的<code>InterfaceController</code>继承了<code>DataSourceChangedDelegate</code>，并且被<code>WatchSessionManager</code>持续追踪着：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">    <span class="comment">// in your WatchKit Extension</span></span><br><span class="line">    <span class="comment">//  InterfaceController.swift</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">InterfaceController</span>: <span class="title">WKInterfaceController</span>, <span class="title">DataSourceChangedDelegate</span> </span>&#123;</span><br><span class="line">    <span class="preprocessor">@IBOutlet</span> <span class="keyword">var</span> foodTable: <span class="type">WKInterfaceTable</span>!</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">awakeWithContext</span><span class="params">(context: AnyObject?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.awakeWithContext(context)</span><br><span class="line"></span><br><span class="line">        <span class="type">WatchSessionManager</span>.sharedManager.addDataSourceChangedDelegate(<span class="keyword">self</span>)</span><br><span class="line">        loadTableData(<span class="type">DataSource</span>())</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">didDeactivate</span><span class="params">()</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// remove InterfaceController as a dataSourceChangedDelegate</span></span><br><span class="line">        <span class="comment">// to prevent memory leaks</span></span><br><span class="line">        <span class="type">WatchSessionManager</span>.sharedManager.removeDataSourceChangedDelegate(<span class="keyword">self</span>)</span><br><span class="line">        <span class="keyword">super</span>.didDeactivate()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// MARK: DataSourceUpdatedDelegate</span></span><br><span class="line">    <span class="comment">// update the table once the data is changed!</span></span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">dataSourceDidUpdate</span><span class="params">(dataSource: DataSource)</span></span> &#123;</span><br><span class="line">        loadTableData(dataSource)</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    private <span class="class"><span class="keyword">extension</span> <span class="title">InterfaceController</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    private <span class="func"><span class="keyword">func</span> <span class="title">loadTableData</span><span class="params">(dataSource: DataSource)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        foodTable.setNumberOfRows(dataSource.items.<span class="built_in">count</span>, withRowType: <span class="string">"FoodTableRowController"</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (index, item) <span class="keyword">in</span> dataSource.items.<span class="built_in">enumerate</span>() &#123;</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> row = foodTable.rowControllerAtIndex(index) <span class="keyword">as</span>? <span class="type">FoodTableRowController</span> &#123;</span><br><span class="line">                <span class="keyword">switch</span> item &#123;</span><br><span class="line">                <span class="keyword">case</span> .<span class="type">Food</span>(<span class="keyword">let</span> foodItem):</span><br><span class="line">                    row.foodLabel.setText(foodItem)</span><br><span class="line">                <span class="keyword">case</span> .<span class="type">Unknown</span>:</span><br><span class="line">                    row.foodLabel.setText(<span class="string">"¯\\_(ツ)_/¯"</span>)</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就是这样啦！<br><a href="https://github.com/NatashaTheRobot/WatchConnectivityUserInfoDemo" target="_blank" rel="external">你可以在Github上查看完整源代码！</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Natasha-The-Robot/">Natasha The Robot</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/WatchOS-2/">WatchOS 2</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/11/17/watchconnectivity-user-info/" data-title="WatchConnectivity：通过用户信息共享所有数据 | Hexo" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/11/20/swift-reflection-api-what-you-can-do/" title="Swift 反射 API 及用法">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Swift 反射 API 及用法</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/11/13/capturing_context/"  title="捕获上下文信息">
+ <strong>NEXT:</strong><br/> 
+ <span>捕获上下文信息
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#免责声明"><span class="toc-number">1.</span> <span class="toc-text">免责声明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#步骤"><span class="toc-number">2.</span> <span class="toc-text">步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发送数据"><span class="toc-number">3.</span> <span class="toc-text">发送数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接收数据"><span class="toc-number">4.</span> <span class="toc-text">接收数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更新数据"><span class="toc-number">5.</span> <span class="toc-text">更新数据</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分類</p>
+		<ul>
+		
+			<li><a href="/categories/3D-Touch/" title="3D Touch">3D Touch<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Swift/" title="Swift">Swift<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>10</sup></a></li>
+		
+			<li><a href="/categories/Swift-进阶/" title="Swift 进阶">Swift 进阶<sup>8</sup></a></li>
+		
+			<li><a href="/categories/Swift-入门/WatchOS-2/" title="WatchOS 2">WatchOS 2<sup>2</sup></a></li>
+		
+			<li><a href="/categories/WatchOS-2/" title="WatchOS 2">WatchOS 2<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Xcode/" title="Xcode">Xcode<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/APPVENTURE/" title="APPVENTURE">APPVENTURE<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Crunchy-Development/" title="Crunchy Development">Crunchy Development<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Erica-Sadun/" title="Erica Sadun">Erica Sadun<sup>5</sup></a></li>
+		
+			<li><a href="/tags/Jameson-Quave/" title="Jameson Quave">Jameson Quave<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Natasha-The-Robot/" title="Natasha The Robot">Natasha The Robot<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Ole-Begemann/" title="Ole Begemann">Ole Begemann<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Raj-Kandathi/" title="Raj Kandathi">Raj Kandathi<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swift/" title="Swift">Swift<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Terhechte/" title="Terhechte">Terhechte<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thomas/" title="Thomas">Thomas<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thomas-Hanning/" title="Thomas Hanning">Thomas Hanning<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Tomasz-Szulc/" title="Tomasz Szulc">Tomasz Szulc<sup>2</sup></a></li>
+		
+			<li><a href="/tags/ericasadun/" title="ericasadun">ericasadun<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="[object Object]">[object Object]</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

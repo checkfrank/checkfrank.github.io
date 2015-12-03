@@ -1,0 +1,368 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>捕获上下文信息 | Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="[object Object]">
+    
+    <meta name="description" content="原文链接=http://ericasadun.com/2015/08/27/capturing-context-swiftlang/作者=Erica Sadun原文日期=2015/08/27译者=CMB校对=numbbbbb定稿=千叶知风发布时间=
+&lt;!--此处开始正文--&gt;
+假设你正在使用一个类型，当有错误时发生时你想要输出异常发生时的上下文。通常你会使用一些内置的编译器关键字：__FUNCTION__ ， __LINE__ 和 __FILE__ ，这些关键词提供了有关函数调用详细的文本插值：">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="Hexo" title="Hexo"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Hexo">Hexo</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/13/capturing_context/" title="捕获上下文信息" itemprop="url">捕获上下文信息</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="[object Object]">[object Object]</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-11-13T03:54:23.692Z" itemprop="datePublished">2015-11-13</time>
+    更新日期:<time datetime="2015-11-13T03:54:16.627Z" itemprop="dateModified">2015-11-13</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		
+		</div>
+		
+		<p>原文链接=<a href="http://ericasadun.com/2015/08/27/capturing-context-swiftlang/" target="_blank" rel="external">http://ericasadun.com/2015/08/27/capturing-context-swiftlang/</a><br>作者=Erica Sadun<br>原文日期=2015/08/27<br>译者=CMB<br>校对=numbbbbb<br>定稿=千叶知风<br>发布时间=</p>
+<!--此处开始正文-->
+<p>假设你正在使用一个类型，当有错误时发生时你想要输出异常发生时的上下文。通常你会使用一些内置的编译器关键字：<code>__FUNCTION__</code> ， <code>__LINE__</code> 和 <code>__FILE__</code> ，这些关键词提供了有关函数调用详细的文本插值：<br><a id="more"></a><br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public <span class="class"><span class="keyword">struct</span> <span class="title">Error</span>: <span class="title">ErrorType</span> </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> source: <span class="type">String</span>; <span class="keyword">let</span> reason: <span class="type">String</span></span><br><span class="line">    public <span class="keyword">init</span>(<span class="number">_</span> reason: <span class="type">String</span>, source: <span class="type">String</span> = <span class="keyword">__FUNCTION__</span>,</span><br><span class="line">        file: <span class="type">String</span> = <span class="keyword">__FILE__</span>, line: <span class="type">Int</span> = <span class="keyword">__LINE__</span>) &#123;</span><br><span class="line">            <span class="keyword">self</span>.reason = reason; <span class="keyword">self</span>.source = <span class="string">"<span class="subst">\(source)</span>:<span class="subst">\(file)</span>:<span class="subst">\(line)</span>"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>一行典型的 <code>Error</code> 输出如下所示:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Error</span>(source: <span class="string">"myFunction():&lt;EXPR&gt;:14"</span>, reason: <span class="string">"An important reason"</span>)</span><br></pre></td></tr></table></figure>
+<p>虽然这种结构能够让你捕获出现异常的函数、文件和行号，但你无法捕捉没有类型参数的原始父类型。为了捕获该类型，需要在 <code>Error</code> 结构体构造器中包含“原始类型”，并向构造器中传递 <code>self.dynamicType</code> 参数。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public <span class="class"><span class="keyword">struct</span> <span class="title">Error</span>: <span class="title">ErrorType</span> </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> source: <span class="type">String</span>; <span class="keyword">let</span> reason: <span class="type">String</span></span><br><span class="line">    public <span class="keyword">init</span>(<span class="number">_</span> reason: <span class="type">String</span>, type: <span class="type">Any</span> = <span class="string">""</span>, </span><br><span class="line">        source: <span class="type">String</span> = <span class="keyword">__FUNCTION__</span>,</span><br><span class="line">        file: <span class="type">String</span> = <span class="keyword">__FILE__</span>, </span><br><span class="line">        line: <span class="type">Int</span> = <span class="keyword">__LINE__</span>) &#123;</span><br><span class="line">            <span class="keyword">self</span>.reason = reason; <span class="keyword">self</span>.source = <span class="string">"<span class="subst">\(source)</span>:<span class="subst">\(file)</span>:<span class="subst">\(line)</span>:<span class="subst">\(type)</span>"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我很不喜欢这种额外添加类型参数的方式，它唯一的作用就是简化错误生成。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public <span class="class"><span class="keyword">struct</span> <span class="title">Parent</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">myFunction</span><span class="params">()</span></span> throws &#123;</span><br><span class="line">        throw <span class="type">Error</span>(<span class="string">"An important reason"</span>, type: <span class="keyword">self</span>.<span class="keyword">dynamicType</span>)&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">do</span> &#123;try <span class="type">Parent</span>().myFunction()&#125; catch&#123;<span class="built_in">print</span>(error)&#125;</span><br><span class="line"><span class="comment">// Error(source: "myFunction():&lt;EXPR&gt;:14:Parent", reason: "An important reason")</span></span><br></pre></td></tr></table></figure>
+<p>我更喜欢扩展 <code>Contextualizable</code> 来实现自动捕获类型上下文。注意，默认实现的协议方法中用到了 <code>self.dynamicType</code>，它不能被用在方法签名中（译者注：也就是说不能当做函数参数或者返回值）。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">Contextualizable</span> </span>&#123;&#125;</span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Contextualizable</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">currentContext</span><span class="params">(file : String = <span class="keyword">__FILE__</span>, function : String = <span class="keyword">__FUNCTION__</span>, line : Int = <span class="keyword">__LINE__</span>)</span></span> -&gt; <span class="type">String</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"<span class="subst">\(file)</span>:<span class="subst">\(function)</span>:<span class="subst">\(line)</span>:<span class="subst">\(<span class="keyword">self</span>.<span class="keyword">dynamicType</span>)</span>"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结合上述两种方法可以简化整个过程轻松实现我们的目标。共享 <code>Error</code> 类型之后就可以把变量改成常量，并且把上下文相关代码从 <code>Error</code> 构造器移动到遵循协议的类型中，这样就可以自动继承 <code>currentContext</code> 方法。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public <span class="class"><span class="keyword">struct</span> <span class="title">Error</span>: <span class="title">ErrorType</span> </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> source: <span class="type">String</span>; <span class="keyword">let</span> reason: <span class="type">String</span></span><br><span class="line">    public <span class="keyword">init</span>(<span class="number">_</span> source: <span class="type">String</span> = <span class="keyword">__FILE__</span>, <span class="number">_</span> reason: <span class="type">String</span>) &#123;</span><br><span class="line">        <span class="keyword">self</span>.reason = reason; <span class="keyword">self</span>.source = source</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">public <span class="class"><span class="keyword">struct</span> <span class="title">Parent</span>: <span class="title">Contextualizable</span> </span>&#123;</span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">myFunction</span><span class="params">()</span></span> throws &#123;</span><br><span class="line">        throw <span class="type">Error</span>(currentContext(), <span class="string">"An important reason"</span>)&#125;</span><br></pre></td></tr></table></figure>
+<p>更新之后，错误输出中会包含原始类型。</p>
+<p>正如读者 <code>Kametrixom</code> 所指出的，你还可以扩展 <code>Contextualizable</code> 协议并创建你自己的错误。（他还写了一个<a href="https://gist.github.com/Kametrixom/21da650bd7c7006a70e3" target="_blank" rel="external">非常棒的错误类型</a>，可以选择是否添加上下文。）</p>
+<p>本文的所有代码可以在 <a href="https://gist.github.com/erica/b6f4884ed5d70c269107" target="_blank" rel="external">这个 Gist</a> 中找到（译者注：Gist 已经被墙，需要翻墙查看）。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Erica-Sadun/">Erica Sadun</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Swift-进阶/">Swift 进阶</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/11/13/capturing_context/" data-title="捕获上下文信息 | Hexo" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/11/17/watchconnectivity-user-info/" title="WatchConnectivity：通过用户信息共享所有数据">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  WatchConnectivity：通过用户信息共享所有数据</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/11/10/swift-tutorial-for-beginners-part-1/"  title="写给初学者的 Swift 教程 Part 1">
+ <strong>NEXT:</strong><br/> 
+ <span>写给初学者的 Swift 教程 Part 1
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+  
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分類</p>
+		<ul>
+		
+			<li><a href="/categories/3D-Touch/" title="3D Touch">3D Touch<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Swift/" title="Swift">Swift<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>10</sup></a></li>
+		
+			<li><a href="/categories/Swift-进阶/" title="Swift 进阶">Swift 进阶<sup>8</sup></a></li>
+		
+			<li><a href="/categories/Swift-入门/WatchOS-2/" title="WatchOS 2">WatchOS 2<sup>2</sup></a></li>
+		
+			<li><a href="/categories/WatchOS-2/" title="WatchOS 2">WatchOS 2<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Xcode/" title="Xcode">Xcode<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/APPVENTURE/" title="APPVENTURE">APPVENTURE<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Crunchy-Development/" title="Crunchy Development">Crunchy Development<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Erica-Sadun/" title="Erica Sadun">Erica Sadun<sup>5</sup></a></li>
+		
+			<li><a href="/tags/Jameson-Quave/" title="Jameson Quave">Jameson Quave<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Natasha-The-Robot/" title="Natasha The Robot">Natasha The Robot<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Ole-Begemann/" title="Ole Begemann">Ole Begemann<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Raj-Kandathi/" title="Raj Kandathi">Raj Kandathi<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swift/" title="Swift">Swift<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Terhechte/" title="Terhechte">Terhechte<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thomas/" title="Thomas">Thomas<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thomas-Hanning/" title="Thomas Hanning">Thomas Hanning<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Tomasz-Szulc/" title="Tomasz Szulc">Tomasz Szulc<sup>2</sup></a></li>
+		
+			<li><a href="/tags/ericasadun/" title="ericasadun">ericasadun<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="[object Object]">[object Object]</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,463 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>写给初学者的 Swift 教程 Part 1 | Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="[object Object]">
+    
+    <meta name="description" content="原文链接=http://www.thomashanning.com/swift-tutorial-for-beginners-part-1/作者=Thomas Hanning8原文日期=2015/10/29译者=小铁匠Linus校对=千叶知风定稿=发布时间=
+&lt;!--此处开始正文--&gt;
+Swift 是苹果官方新推出的编程语言，它可以为 iOS、 watchOS、 tvOS 和 Mac OS 开发应用。在本教程中，你将会领略其所有基本的操作。">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="Hexo" title="Hexo"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Hexo">Hexo</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/10/swift-tutorial-for-beginners-part-1/" title="写给初学者的 Swift 教程 Part 1" itemprop="url">写给初学者的 Swift 教程 Part 1</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="[object Object]">[object Object]</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-11-10T08:56:53.639Z" itemprop="datePublished">2015-11-10</time>
+    更新日期:<time datetime="2015-11-10T08:55:42.978Z" itemprop="dateModified">2015-11-10</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#你将在这个“Swift初学者教程”中学到些什么呢？"><span class="toc-number">1.</span> <span class="toc-text">你将在这个“Swift初学者教程”中学到些什么呢？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#下载_Xcode"><span class="toc-number">2.</span> <span class="toc-text">下载 Xcode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Playgrounds"><span class="toc-number">3.</span> <span class="toc-text">Playgrounds</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hello_World!"><span class="toc-number">4.</span> <span class="toc-text">Hello World!</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量"><span class="toc-number">5.</span> <span class="toc-text">变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常量"><span class="toc-number">6.</span> <span class="toc-text">常量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型标注"><span class="toc-number">7.</span> <span class="toc-text">类型标注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#条件语句"><span class="toc-number">8.</span> <span class="toc-text">条件语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#循环"><span class="toc-number">9.</span> <span class="toc-text">循环</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#while_循环"><span class="toc-number">9.1.</span> <span class="toc-text">while 循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#repeat-while_循环"><span class="toc-number">9.2.</span> <span class="toc-text">repeat-while 循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#for_循环"><span class="toc-number">9.3.</span> <span class="toc-text">for 循环</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可选类型"><span class="toc-number">10.</span> <span class="toc-text">可选类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数"><span class="toc-number">11.</span> <span class="toc-text">函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接下来该干什么"><span class="toc-number">12.</span> <span class="toc-text">接下来该干什么</span></a></li></ol>
+		</div>
+		
+		<p>原文链接=<a href="http://www.thomashanning.com/swift-tutorial-for-beginners-part-1/" target="_blank" rel="external">http://www.thomashanning.com/swift-tutorial-for-beginners-part-1/</a><br>作者=Thomas Hanning8<br>原文日期=2015/10/29<br>译者=小铁匠Linus<br>校对=千叶知风<br>定稿=<br>发布时间=</p>
+<!--此处开始正文-->
+<p>Swift 是苹果官方新推出的编程语言，它可以为 iOS、 watchOS、 tvOS 和 Mac OS 开发应用。在本教程中，你将会领略其所有基本的操作。<br><a id="more"></a></p>
+<h2 id="你将在这个“Swift初学者教程”中学到些什么呢？">你将在这个“Swift初学者教程”中学到些什么呢？</h2><p>本教程包含了以下这些话题：</p>
+<ul>
+<li>下载 Xcode</li>
+<li>Playgrounds</li>
+<li>Hello World!</li>
+<li>变量</li>
+<li>常量</li>
+<li>类型标注</li>
+<li>条件语句</li>
+<li>循环语句</li>
+<li>可选类型</li>
+<li>函数</li>
+</ul>
+<p>将会有更多内容出现在”写给初学者的 Swift 教程“系列中。</p>
+<h2 id="下载_Xcode">下载 Xcode</h2><p>成为 Swift 大牛的第一步当然是下载 Xcode 啦。你可以直接从 App Store 里下载。Xcode 是苹果官方的 IDE 工具，它可以为 iOS、 watchOS、 tvOS 和 Mac OS 这些平台开发应用。</p>
+<h2 id="Playgrounds">Playgrounds</h2><p>你会把大部分编程的时间花在项目上。但是，Xcode有一个非常有趣的特性，它可以给初学者和大牛带来巨大的帮助，名叫 Playgrounds。你可以在 Playground 里写完 Swift 代码后直接看到执行的结果。因此，如果你想要学一些新特性或试验一些新功能，都可以打开 Playground 然后就能不用像在工程里那样编译再执行了。</p>
+<p>如果你正在写一个项目，那么在边上打开 Playground 也是很可取的。因为，你可以在 Playground 里很快捷的试验一些小功能。</p>
+<p>言归正传，讲讲如何使用 Playground。第一步打开 Xcode，接着在欢迎界面点击”Get started with a playground“。如果你没有看到这个欢迎界面，可以按 File -&gt; New -&gt; Playground 这样的路径打开 Playground。指定 Playground 的文件名和保存位置之后，你就可以开始写代码啦。</p>
+<h2 id="Hello_World!">Hello World!</h2><p>在大多数的编程书籍中，都把打印“Hello World!”作为第一个项目。我们也不会打破这个传统的，哈哈。</p>
+<p>因此，我们在 playground 里写下如下代码：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">"Hello World!"</span>)</span><br></pre></td></tr></table></figure>
+<p>一打完这行代码，你就可以在 playground 的右边看到输出的结果了。</p>
+<p><img src="http://thomashanningcom.c.presscdn.com/wp-content/uploads/2015/10/Screen-Shot-2015-10-03-at-18.26.55-1024x636.png" alt=""></p>
+<p>恭喜，你已经成功编写了第一个 Swift 程序啦。</p>
+<h2 id="变量">变量</h2><p>在打印出第一句代码后，我们可以开始真正的编程啦。你需要从变量开始。变量可以存储一个值，比如数字或字符串。可以使用<code>var</code>关键字来定义变量：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> aNumber = <span class="number">5</span></span><br></pre></td></tr></table></figure>
+<p>这样，我们就有了一个叫<code>aNumber</code>的变量，它的值为 5。接着，我们可以尝试着改变这个变量的值：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aNumber = <span class="number">10</span></span><br></pre></td></tr></table></figure>
+<p>我们也可以把一个数学表示式的结果存到这个变量里：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aNumber = <span class="number">5</span> + <span class="number">6</span></span><br></pre></td></tr></table></figure>
+<p>当然也可以把变量的值打印出来，这需要用到特殊的术语，如下：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">"The number is equal <span class="subst">\(aNumber)</span>"</span>)</span><br></pre></td></tr></table></figure>
+<p>变量可以有不同的类型。你可以为变量指定类型，比如字符串、浮点数或者布尔值：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> aString = <span class="string">"A String"</span></span><br><span class="line"><span class="keyword">var</span> aDoble = <span class="number">13.3</span></span><br><span class="line"><span class="keyword">var</span> aBool = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>但是，一旦你给变量赋了某一类型的值之后，就只能为变量赋相同类型的值了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aBool = <span class="string">"A String"</span> <span class="comment">//编译错误</span></span><br></pre></td></tr></table></figure>
+<p>编译器是一段可以把你写的代码翻译成机器码的程序。如果你写了一段编译器不能理解或者违反编程规则的代码，编译器就会报错。</p>
+<h2 id="常量">常量</h2><p>顾名思义，变量的值是可以改变的，而常量的值在第一次赋值后就不能修改了。对于常量，你可以使用关键字<code>let</code>来定义：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> aConstantNumber = <span class="number">10</span></span><br></pre></td></tr></table></figure>
+<p>如果你尝试修改一个常量的值，就会报错：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aConstantNumber = <span class="number">10</span> <span class="comment">//编译出错</span></span><br></pre></td></tr></table></figure>
+<p>那为什么还要有常量呢？因为，有时候并不希望一个值在第一次赋值后被修改，比如，在指定一个人的姓名后，就不希望这个值被再次修改。</p>
+<h2 id="类型标注">类型标注</h2><p>我们已经知道，变量在第一次赋值之后会确定类型。当然，我们也可以在赋值时直接指定变量或常量的类型：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> aNumber: <span class="type">Int</span> = <span class="number">10</span></span><br></pre></td></tr></table></figure>
+<p>这个代码的结果和之前的是一样的，但是现在这段代码更加容易读懂。第一眼就知道这个变量的类型是<code>Int</code>。当然， 除了<code>Int</code>，还有许多其他的类型：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> aString: <span class="type">String</span> = <span class="string">"A String"</span></span><br><span class="line"><span class="keyword">var</span> aDouble: <span class="type">Double</span> = <span class="number">13.3</span></span><br><span class="line"><span class="keyword">var</span> aBool: <span class="type">Bool</span> = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h2 id="条件语句">条件语句</h2><p>一个程序如果总是做相同的事情，这很无聊。因此，出现了所谓的条件语句来控制程序的流向。比如，你想要根据计算的结果有不同的输出。能控制程序流向的，也是最普遍的条件语句是<code>if</code>条件语句，举例如下：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> number1 = <span class="number">5</span></span><br><span class="line"><span class="keyword">var</span> number2 = <span class="number">10</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> number1 &lt; number2 &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"number1 is smaller than number2"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这段示例代码中，我们通过<code>if</code>条件语句来判断<code>number1</code>是否小于<code>number2</code>。如果满足这个条件的话，程序就会执行到大括号括起来的 if 代码块里。你也可以在代码块里添加你想要执行的代码。</p>
+<p>另外，你还可以在<code>if</code>条件判断返回<code>false</code>的代码块里写相应代码：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> number1 = <span class="number">5</span></span><br><span class="line"><span class="keyword">var</span> number2 = <span class="number">10</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> number1 &lt; number2 &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"number1 is smaller than number2"</span>)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"number1 is not smaller than number2"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然，你可以写多个<code>if</code>条件语句：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> number1 &lt; number2 &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"number1 is smaller than number2"</span>)</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> number2 &lt; number1 &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"number2 is than number2"</span>)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"number1 is equal number2"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Swift 里另外一种条件语句是<code>switch</code>条件语句。<code>switch</code>语句的形式就是把某个值与一个或若干个值作比较，例子如下：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> name &#123;</span><br><span class="line"><span class="keyword">case</span> <span class="string">"Mick"</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"The name is Mick"</span>)</span><br><span class="line"><span class="keyword">case</span> <span class="string">"John"</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"The name is John"</span>)</span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"The name is neither Mick nor John"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>switch</code>关键字后写上需要匹配的值<code>name</code>。然后，每个<code>case</code>后跟上可能匹配的值。如果<code>name</code>匹配了某一个值，对应<code>case</code>里的代码将被执行；否则，继续进行匹配。假如没有一个值能够匹配，就会执行<code>default</code>后的代码。对于初学者来说，知道<code>switch</code>条件语句有很多可能匹配的值就足够了。</p>
+<h2 id="循环">循环</h2><p>除了条件语句意外，还有一个控制程序流的重要结构：循环。循环的作用主要是能多次执行代码块里的代码。Swift 有三种循环的类型：while 循环, repeat-while 循环和 for 循环.</p>
+<h3 id="while_循环">while 循环</h3><p>下面的例子使用了 while 循环：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> i = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (i &lt; <span class="number">10</span>) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Hello World"</span>)</span><br><span class="line">    i = i + <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>while 循环以<code>while</code>关键字开始，在<code>while</code>关键字后跟上判断条件。如果条件为 true，会重复运行代码块里的一系列代码，比如本例子里的循环打印”Hello World”十次。如果没有修改变量<code>i</code>的值，循环将一直进行下去。</p>
+<h3 id="repeat-while_循环">repeat-while 循环</h3><p>repeat-while 循环和 while 循环很相似。但是，不再像 while 循环那样先判断循环条件，例子如下：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> i = <span class="number">10</span></span><br><span class="line"> </span><br><span class="line">repeat &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Hello World"</span>)</span><br><span class="line">    i = i + <span class="number">1</span></span><br><span class="line">&#125; <span class="keyword">while</span> (i &lt; <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<p>为什么要使用repeat-while 循环而不是 while 循环？repeat-while 循环和 while 循环的主要区别是在判断循环条件之前，先执行一次循环的代码块。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> i = <span class="number">11</span></span><br><span class="line"> </span><br><span class="line">repeat &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Hello World"</span>)</span><br><span class="line">    i = i + <span class="number">1</span></span><br><span class="line">&#125; <span class="keyword">while</span> (i &lt; <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<p>上面这个例子中，尽管判断条件永远是 false，但是还是会打印一次“Hello World”。因此，有时候需要先判断，而有时候不想要先判断，这就要由具体的情况来决定到底使用哪种循环了。</p>
+<h3 id="for_循环">for 循环</h3><p>for 循环很好用，它可以对一个集合里面的每个元素执行一系列语句。同时，也有好几种遍历的方式，先来看一个例子：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">1</span>...<span class="number">10</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"This iteration number <span class="subst">\(i)</span>"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果如上面的例子使用三个点（闭区间操作符）的话，最后一个数字（10）也会被包含。相反地，也可以像下面的例子一样使用：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">1</span>..&lt;<span class="number">10</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"This iteration number <span class="subst">\(i)</span>"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上面这个例子中，最后一个数字（10）就不会被包含进去。另外，还有一种方式可以写 for 循环，就是标准 C 样式的 for 循环：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> <span class="keyword">var</span> i = <span class="number">1</span>; i &lt;= <span class="number">10</span>; i++ &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"This iteration number <span class="subst">\(i)</span>"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个循环会执行十次。分号将循环的定义分为 3 个部分：首先，循环首次启动时，变量会被初始化，并赋一个起始值；其次，条件判断表达式被调用，如果表达式调用结果为true，则会执行大括号内部的代码；最后，执行所有语句之后，执行递增表达式，在本例中，变量<code>i</code>每次增加 1。其中，<code>i++</code>等同于<code>i = i + 1</code>。</p>
+<h2 id="可选类型">可选类型</h2><p>可选类型是 Swift 里很特殊的新特性，它非常重要一开始就需要学习。试想一下，一个变量可能没有值更加说的通，比如，一个变量用来存储一个人的 middle name，那某人没有 middle name 的话该怎么表示呢？我们很自然的能想到赋值一个空字符串：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> middleName: <span class="type">String</span> = <span class="string">""</span></span><br></pre></td></tr></table></figure>
+<p>然而，如果我们让<code>middleName</code>成为可选类型，我们就可以为变量指定表示“这里没有值”的<code>nil</code>。可选类型的定义是在类型后面跟上问号：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> middleName: <span class="type">String</span>? = <span class="literal">nil</span></span><br></pre></td></tr></table></figure>
+<p>可选类型的变量可以有非空的值。但是，如果你像普通变量那样访问可选类型的变量，就会编译出错：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> anotherName: <span class="type">String</span> = middleName <span class="comment">//编译出错</span></span><br></pre></td></tr></table></figure>
+<p>你可以通过解包来访问，使用感叹号进行解包：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> anotherName: <span class="type">String</span> = middleName!</span><br></pre></td></tr></table></figure>
+<p>值得注意的是，如果你对一个非<code>nil</code>的值进行解包，可以得到具体的值；否则，就会在运行时报错，因为不能对<code>nil</code>进行解包。</p>
+<p>因此，最好在使用可选类型变量前先判断是否是<code>nil</code>，使用所谓的可选绑定（optional binding）就可以搞定了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> middleName: <span class="type">String</span>? = <span class="string">"John"</span></span><br><span class="line"><span class="keyword">var</span> anotherName: <span class="type">String</span> = <span class="string">"Michael"</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">let</span> name = middleName &#123;</span><br><span class="line">    anotherName = name</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一开始，这段代码可能看起来会有点奇怪，实际上很简单，意思也很明确：如果<code>middleName</code>等于<code>nil</code>的话，对应的代码块就不会执行。如果<code>middleName</code>不等于<code>nil</code>的话，变量<code>name</code>就会获得<code>middleName</code>的值，对应的代码块就会被执行。在代码块里，<code>name</code>就不再是可选变量了，因此可以给其他变量赋值。</p>
+<h2 id="函数">函数</h2><p>你可能经常会遇到，一些代码可以应用于许多不同的情况。而函数就是用来完成特定任务的独立的代码块，并且当函数需要执行的时候，这个名字会被用于“调用”函数。先从简单打印“Hello World”的函数开始吧：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">printHelloWorld</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Hello World!"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>事实上，你把上面那段代码写到 playground 里，界面右边是没有输出的。如果你通过下面的方式调用这个函数的话，就会有对应的输出了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">printHelloWorld</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Hello World!"</span>)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">printHelloWorld()</span><br></pre></td></tr></table></figure>
+<p>如果你调用这个函数两次的话，你会看到界面右边会出现两次输出：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">printHelloWorld</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"Hello World!"</span>)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">printHelloWorld()</span><br><span class="line">printHelloWorld()</span><br></pre></td></tr></table></figure>
+<p>你也可以给函数传递额外的信息，即传递参数。每个参数都需要指定参数名和类型，然后你就可以在函数里访问这些参数的值了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">printANumber</span><span class="params">(number:Int)</span></span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"The number is <span class="subst">\(number)</span>"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在，你就可以像下面的方式调用有参数的函数了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">printANumber</span><span class="params">(number:Int)</span></span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"The number is <span class="subst">\(number)</span>"</span>)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">printANumber(<span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+<p>本例中，对应的输出就是：“The number is 5”。</p>
+<p>你甚至可以指定多个参数。然后，你在调用函数时，除了不需要写第一个参数的参数名之外，其他参数都需要写参数名：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">printNumbers</span><span class="params">(number1:Int, number2:Int, number3:Int)</span></span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">"The number are <span class="subst">\(number1)</span>, <span class="subst">\(number2)</span>, <span class="subst">\(number3)</span>"</span>)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">printNumbers(<span class="number">5</span>, number2:<span class="number">10</span>, number3:<span class="number">15</span>)</span><br></pre></td></tr></table></figure>
+<p>另外，函数最重要的一点就是返回值。如果需要函数有返回值，你就要指定返回值的类型，同时，返回值由<code>return</code>关键字返回。</p>
+<p>举个例子：你需要写一个函数，实现返回两个数字中更大者的功能。大体代码如下：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">maxOfNumbers</span><span class="params">(number1: Int, number2: Int)</span></span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> number1 &lt; number2 &#123;</span><br><span class="line">        <span class="keyword">return</span> number2</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> number1</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">maxOfNumbers(<span class="number">5</span>, number2: <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<p>输出结果为 10。</p>
+<h2 id="接下来该干什么">接下来该干什么</h2><p>现在已经基本熟悉 Swift 中大部分的基本语法了。这对之后的学习是个很重要的基础。接下来可以自己动手在 Playground 里试着写一些小功能，也可以看看关于本文知识点的其他文章：</p>
+<ul>
+<li><a href="http://www.thomashanning.com/should-you-use-objective-c-or-swift/" target="_blank" rel="external">该使用 Objective-C 还是 Swift？</a></li>
+<li><a href="http://www.thomashanning.com/constants-in-swift/" target="_blank" rel="external">Swift 中的常量</a></li>
+<li><a href="http://www.thomashanning.com/optionals-in-swift/" target="_blank" rel="external">Swift 中的可选类型</a></li>
+</ul>
+<p>在本系列的后续部分，我们会讨论更多关于 Swift 的新特性。请继续关注!</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Thomas-Hanning/">Thomas Hanning</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Swift-入门/">Swift 入门</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/11/10/swift-tutorial-for-beginners-part-1/" data-title="写给初学者的 Swift 教程 Part 1 | Hexo" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/11/13/capturing_context/" title="捕获上下文信息">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  捕获上下文信息</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/11/07/what-makes-good-code/"  title="好代码是怎样炼成的">
+ <strong>NEXT:</strong><br/> 
+ <span>好代码是怎样炼成的
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#你将在这个“Swift初学者教程”中学到些什么呢？"><span class="toc-number">1.</span> <span class="toc-text">你将在这个“Swift初学者教程”中学到些什么呢？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#下载_Xcode"><span class="toc-number">2.</span> <span class="toc-text">下载 Xcode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Playgrounds"><span class="toc-number">3.</span> <span class="toc-text">Playgrounds</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hello_World!"><span class="toc-number">4.</span> <span class="toc-text">Hello World!</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量"><span class="toc-number">5.</span> <span class="toc-text">变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常量"><span class="toc-number">6.</span> <span class="toc-text">常量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型标注"><span class="toc-number">7.</span> <span class="toc-text">类型标注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#条件语句"><span class="toc-number">8.</span> <span class="toc-text">条件语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#循环"><span class="toc-number">9.</span> <span class="toc-text">循环</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#while_循环"><span class="toc-number">9.1.</span> <span class="toc-text">while 循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#repeat-while_循环"><span class="toc-number">9.2.</span> <span class="toc-text">repeat-while 循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#for_循环"><span class="toc-number">9.3.</span> <span class="toc-text">for 循环</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可选类型"><span class="toc-number">10.</span> <span class="toc-text">可选类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数"><span class="toc-number">11.</span> <span class="toc-text">函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接下来该干什么"><span class="toc-number">12.</span> <span class="toc-text">接下来该干什么</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分類</p>
+		<ul>
+		
+			<li><a href="/categories/3D-Touch/" title="3D Touch">3D Touch<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Swift/" title="Swift">Swift<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>10</sup></a></li>
+		
+			<li><a href="/categories/Swift-进阶/" title="Swift 进阶">Swift 进阶<sup>8</sup></a></li>
+		
+			<li><a href="/categories/Swift-入门/WatchOS-2/" title="WatchOS 2">WatchOS 2<sup>2</sup></a></li>
+		
+			<li><a href="/categories/WatchOS-2/" title="WatchOS 2">WatchOS 2<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Xcode/" title="Xcode">Xcode<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/APPVENTURE/" title="APPVENTURE">APPVENTURE<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Crunchy-Development/" title="Crunchy Development">Crunchy Development<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Erica-Sadun/" title="Erica Sadun">Erica Sadun<sup>5</sup></a></li>
+		
+			<li><a href="/tags/Jameson-Quave/" title="Jameson Quave">Jameson Quave<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Natasha-The-Robot/" title="Natasha The Robot">Natasha The Robot<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Ole-Begemann/" title="Ole Begemann">Ole Begemann<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Raj-Kandathi/" title="Raj Kandathi">Raj Kandathi<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swift/" title="Swift">Swift<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Terhechte/" title="Terhechte">Terhechte<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thomas/" title="Thomas">Thomas<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thomas-Hanning/" title="Thomas Hanning">Thomas Hanning<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Tomasz-Szulc/" title="Tomasz Szulc">Tomasz Szulc<sup>2</sup></a></li>
+		
+			<li><a href="/tags/ericasadun/" title="ericasadun">ericasadun<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="[object Object]">[object Object]</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>
