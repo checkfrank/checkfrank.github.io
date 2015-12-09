@@ -38,7 +38,7 @@
 				<h1 class="site-name"><a href="/" title="Hexo">Hexo</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -51,7 +51,7 @@
 					
 					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
 						<input type="hidden" name="q" value="site:yoursite.com">
 					</form>
 					
@@ -75,7 +75,7 @@
     </p>
   <p class="article-time">
     <time datetime="2015-10-27T01:02:44.872Z" itemprop="datePublished">2015-10-27</time>
-    更新日期:<time datetime="2015-10-27T01:02:44.872Z" itemprop="dateModified">2015-10-27</time>
+    Updated:<time datetime="2015-10-27T01:02:44.872Z" itemprop="dateModified">2015-10-27</time>
     
   </p>
 </header>
@@ -83,7 +83,7 @@
 		
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目錄</strong>
+			<strong class="toc-title">Contents</strong>
 		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#开始咯"><span class="toc-number">1.</span> <span class="toc-text">开始咯</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#一个交易引擎"><span class="toc-number">2.</span> <span class="toc-text">一个交易引擎</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#第一步"><span class="toc-number">2.1.</span> <span class="toc-text">第一步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#交易类型"><span class="toc-number">2.2.</span> <span class="toc-text">交易类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#警卫！警卫！呼叫警卫！"><span class="toc-number">2.3.</span> <span class="toc-text">警卫！警卫！呼叫警卫！</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模式匹配进阶"><span class="toc-number">3.</span> <span class="toc-text">模式匹配进阶</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-_通配符模式"><span class="toc-number">3.1.</span> <span class="toc-text">1. 通配符模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-_标示模式"><span class="toc-number">3.2.</span> <span class="toc-text">2. 标示模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-_值绑定模式"><span class="toc-number">3.3.</span> <span class="toc-text">3. 值绑定模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-_元组模式"><span class="toc-number">3.4.</span> <span class="toc-text">4. 元组模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-_枚举_Case_模式（Enumeration_Case_Pattern）"><span class="toc-number">3.5.</span> <span class="toc-text">5. 枚举 Case 模式（Enumeration Case Pattern）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-_类型转换模式"><span class="toc-number">3.6.</span> <span class="toc-text">6. 类型转换模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-_表达模式"><span class="toc-number">3.7.</span> <span class="toc-text">7. 表达模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fallthrough，break_和标签"><span class="toc-number">3.8.</span> <span class="toc-text">fallthrough，break 和标签</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#真实案例"><span class="toc-number">4.</span> <span class="toc-text">真实案例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#可选值"><span class="toc-number">4.1.</span> <span class="toc-text">可选值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型匹配"><span class="toc-number">4.2.</span> <span class="toc-text">类型匹配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#按范围做分级"><span class="toc-number">4.3.</span> <span class="toc-text">按范围做分级</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字频率统计"><span class="toc-number">4.4.</span> <span class="toc-text">字频率统计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#遍历目录"><span class="toc-number">4.5.</span> <span class="toc-text">遍历目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Fibonacci"><span class="toc-number">4.6.</span> <span class="toc-text">Fibonacci</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#传统的_API_和值提取"><span class="toc-number">4.7.</span> <span class="toc-text">传统的 API 和值提取</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模式和其他关键词"><span class="toc-number">5.</span> <span class="toc-text">模式和其他关键词</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用_for_case"><span class="toc-number">6.</span> <span class="toc-text">使用 for case</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用_guard_case"><span class="toc-number">7.</span> <span class="toc-text">使用 guard case</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用_if_case"><span class="toc-number">8.</span> <span class="toc-text">使用 if case</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#限制"><span class="toc-number">9.</span> <span class="toc-text">限制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#更新"><span class="toc-number">10.</span> <span class="toc-text">更新</span></a></li></ol>
 		</div>
 		
@@ -333,27 +333,27 @@
 
 	
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目錄</strong>
+  <strong class="toc-title">Contents</strong>
   <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#开始咯"><span class="toc-number">1.</span> <span class="toc-text">开始咯</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#一个交易引擎"><span class="toc-number">2.</span> <span class="toc-text">一个交易引擎</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#第一步"><span class="toc-number">2.1.</span> <span class="toc-text">第一步</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#交易类型"><span class="toc-number">2.2.</span> <span class="toc-text">交易类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#警卫！警卫！呼叫警卫！"><span class="toc-number">2.3.</span> <span class="toc-text">警卫！警卫！呼叫警卫！</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模式匹配进阶"><span class="toc-number">3.</span> <span class="toc-text">模式匹配进阶</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-_通配符模式"><span class="toc-number">3.1.</span> <span class="toc-text">1. 通配符模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-_标示模式"><span class="toc-number">3.2.</span> <span class="toc-text">2. 标示模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-_值绑定模式"><span class="toc-number">3.3.</span> <span class="toc-text">3. 值绑定模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-_元组模式"><span class="toc-number">3.4.</span> <span class="toc-text">4. 元组模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-_枚举_Case_模式（Enumeration_Case_Pattern）"><span class="toc-number">3.5.</span> <span class="toc-text">5. 枚举 Case 模式（Enumeration Case Pattern）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-_类型转换模式"><span class="toc-number">3.6.</span> <span class="toc-text">6. 类型转换模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-_表达模式"><span class="toc-number">3.7.</span> <span class="toc-text">7. 表达模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fallthrough，break_和标签"><span class="toc-number">3.8.</span> <span class="toc-text">fallthrough，break 和标签</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#真实案例"><span class="toc-number">4.</span> <span class="toc-text">真实案例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#可选值"><span class="toc-number">4.1.</span> <span class="toc-text">可选值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型匹配"><span class="toc-number">4.2.</span> <span class="toc-text">类型匹配</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#按范围做分级"><span class="toc-number">4.3.</span> <span class="toc-text">按范围做分级</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字频率统计"><span class="toc-number">4.4.</span> <span class="toc-text">字频率统计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#遍历目录"><span class="toc-number">4.5.</span> <span class="toc-text">遍历目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Fibonacci"><span class="toc-number">4.6.</span> <span class="toc-text">Fibonacci</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#传统的_API_和值提取"><span class="toc-number">4.7.</span> <span class="toc-text">传统的 API 和值提取</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#模式和其他关键词"><span class="toc-number">5.</span> <span class="toc-text">模式和其他关键词</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用_for_case"><span class="toc-number">6.</span> <span class="toc-text">使用 for case</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用_guard_case"><span class="toc-number">7.</span> <span class="toc-text">使用 guard case</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用_if_case"><span class="toc-number">8.</span> <span class="toc-text">使用 if case</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#限制"><span class="toc-number">9.</span> <span class="toc-text">限制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#更新"><span class="toc-number">10.</span> <span class="toc-text">更新</span></a></li></ol>
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分類</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 			<li><a href="/categories/3D-Touch/" title="3D Touch">3D Touch<sup>1</sup></a></li>
 		
 			<li><a href="/categories/Swift/" title="Swift">Swift<sup>1</sup></a></li>
 		
-			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>10</sup></a></li>
+			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>13</sup></a></li>
 		
 			<li><a href="/categories/Swift-进阶/" title="Swift 进阶">Swift 进阶<sup>8</sup></a></li>
 		
@@ -369,10 +369,14 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">標簽</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			<li><a href="/tags/APPVENTURE/" title="APPVENTURE">APPVENTURE<sup>1</sup></a></li>
+		
+			<li><a href="/tags/AppCoda/" title="AppCoda">AppCoda<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Benedikt-Terhechte/" title="Benedikt Terhechte">Benedikt Terhechte<sup>1</sup></a></li>
 		
 			<li><a href="/tags/Crunchy-Development/" title="Crunchy Development">Crunchy Development<sup>1</sup></a></li>
 		
@@ -394,7 +398,7 @@
 		
 			<li><a href="/tags/Thomas-Hanning/" title="Thomas Hanning">Thomas Hanning<sup>3</sup></a></li>
 		
-			<li><a href="/tags/Tomasz-Szulc/" title="Tomasz Szulc">Tomasz Szulc<sup>2</sup></a></li>
+			<li><a href="/tags/Tomasz-Szulc/" title="Tomasz Szulc">Tomasz Szulc<sup>3</sup></a></li>
 		
 			<li><a href="/tags/ericasadun/" title="ericasadun">ericasadun<sup>1</sup></a></li>
 		
@@ -403,7 +407,7 @@
 
 
   <div class="rsspart">
-	<a href="null" target="_blank" title="rss">RSS 訂閱</a>
+	<a href="null" target="_blank" title="rss">RSS</a>
 </div>
 
 </aside>
