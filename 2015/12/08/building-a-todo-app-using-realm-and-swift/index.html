@@ -38,7 +38,7 @@
 				<h1 class="site-name"><a href="/" title="Hexo">Hexo</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -51,7 +51,7 @@
 					
 					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
 						<input type="hidden" name="q" value="site:yoursite.com">
 					</form>
 					
@@ -75,7 +75,7 @@
     </p>
   <p class="article-time">
     <time datetime="2015-12-08T09:29:28.239Z" itemprop="datePublished">2015-12-08</time>
-    Updated:<time datetime="2015-12-08T09:28:44.357Z" itemprop="dateModified">2015-12-08</time>
+    更新日期:<time datetime="2015-12-08T09:28:44.357Z" itemprop="dateModified">2015-12-08</time>
     
   </p>
 </header>
@@ -83,7 +83,7 @@
 		
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
+			<strong class="toc-title">文章目錄</strong>
 		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Realm_是什么？"><span class="toc-number">1.</span> <span class="toc-text">Realm 是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么选择_Realm？"><span class="toc-number">2.</span> <span class="toc-text">为什么选择 Realm？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#让我们开始动手吧"><span class="toc-number">3.</span> <span class="toc-text">让我们开始动手吧</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境要求"><span class="toc-number">4.</span> <span class="toc-text">环境要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置_Xcode_和所需的工具"><span class="toc-number">5.</span> <span class="toc-text">配置 Xcode 和所需的工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在_Xcode_中安装_Realm_插件"><span class="toc-number">6.</span> <span class="toc-text">在 Xcode 中安装 Realm 插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Realm_浏览器"><span class="toc-number">7.</span> <span class="toc-text">Realm 浏览器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据模型类"><span class="toc-number">8.</span> <span class="toc-text">数据模型类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#属性"><span class="toc-number">9.</span> <span class="toc-text">属性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#嵌套对象"><span class="toc-number">9.1.</span> <span class="toc-text">嵌套对象</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用_Realm_持久化对象"><span class="toc-number">10.</span> <span class="toc-text">使用 Realm 持久化对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#检索数据"><span class="toc-number">11.</span> <span class="toc-text">检索数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除对象"><span class="toc-number">12.</span> <span class="toc-text">删除对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更新_Objects"><span class="toc-number">13.</span> <span class="toc-text">更新 Objects</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用属性（Property）"><span class="toc-number">13.1.</span> <span class="toc-text">使用属性（Property）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用主键（Primary_Key）"><span class="toc-number">13.2.</span> <span class="toc-text">使用主键（Primary Key）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用_KVC（Key-Value_Coding）"><span class="toc-number">13.3.</span> <span class="toc-text">使用 KVC（Key-Value Coding）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#显示任务项"><span class="toc-number">14.</span> <span class="toc-text">显示任务项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#排序"><span class="toc-number">15.</span> <span class="toc-text">排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">16.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#下一步？"><span class="toc-number">17.</span> <span class="toc-text">下一步？</span></a></li></ol>
 		</div>
 		
@@ -269,10 +269,10 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/12/09/reduce-all-the-things/" title="化零为整：Reduce 详解">
+ <a href="/2015/12/09/should-you-migrate-objective-c-code-to-swift/" title="你应该把 Objective-C 的代码转为 Swift 吗？">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  化零为整：Reduce 详解</span>
+  你应该把 Objective-C 的代码转为 Swift 吗？</span>
 </a>
 </div>
 
@@ -289,27 +289,27 @@
 
 	
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
+  <strong class="toc-title">文章目錄</strong>
   <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Realm_是什么？"><span class="toc-number">1.</span> <span class="toc-text">Realm 是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么选择_Realm？"><span class="toc-number">2.</span> <span class="toc-text">为什么选择 Realm？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#让我们开始动手吧"><span class="toc-number">3.</span> <span class="toc-text">让我们开始动手吧</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#环境要求"><span class="toc-number">4.</span> <span class="toc-text">环境要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置_Xcode_和所需的工具"><span class="toc-number">5.</span> <span class="toc-text">配置 Xcode 和所需的工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在_Xcode_中安装_Realm_插件"><span class="toc-number">6.</span> <span class="toc-text">在 Xcode 中安装 Realm 插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Realm_浏览器"><span class="toc-number">7.</span> <span class="toc-text">Realm 浏览器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据模型类"><span class="toc-number">8.</span> <span class="toc-text">数据模型类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#属性"><span class="toc-number">9.</span> <span class="toc-text">属性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#嵌套对象"><span class="toc-number">9.1.</span> <span class="toc-text">嵌套对象</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用_Realm_持久化对象"><span class="toc-number">10.</span> <span class="toc-text">使用 Realm 持久化对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#检索数据"><span class="toc-number">11.</span> <span class="toc-text">检索数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#删除对象"><span class="toc-number">12.</span> <span class="toc-text">删除对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更新_Objects"><span class="toc-number">13.</span> <span class="toc-text">更新 Objects</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用属性（Property）"><span class="toc-number">13.1.</span> <span class="toc-text">使用属性（Property）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用主键（Primary_Key）"><span class="toc-number">13.2.</span> <span class="toc-text">使用主键（Primary Key）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用_KVC（Key-Value_Coding）"><span class="toc-number">13.3.</span> <span class="toc-text">使用 KVC（Key-Value Coding）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#显示任务项"><span class="toc-number">14.</span> <span class="toc-text">显示任务项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#排序"><span class="toc-number">15.</span> <span class="toc-text">排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">16.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#下一步？"><span class="toc-number">17.</span> <span class="toc-text">下一步？</span></a></li></ol>
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">Categories</p>
+	<p class="asidetitle">分類</p>
 		<ul>
 		
 			<li><a href="/categories/3D-Touch/" title="3D Touch">3D Touch<sup>1</sup></a></li>
 		
 			<li><a href="/categories/Swift/" title="Swift">Swift<sup>1</sup></a></li>
 		
-			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>13</sup></a></li>
+			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>14</sup></a></li>
 		
 			<li><a href="/categories/Swift-进阶/" title="Swift 进阶">Swift 进阶<sup>8</sup></a></li>
 		
@@ -325,7 +325,7 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">Tags</p>
+	<p class="asidetitle">標簽</p>
 		<ul class="clearfix">
 		
 			<li><a href="/tags/APPVENTURE/" title="APPVENTURE">APPVENTURE<sup>1</sup></a></li>
@@ -348,6 +348,8 @@
 		
 			<li><a href="/tags/Swift/" title="Swift">Swift<sup>1</sup></a></li>
 		
+			<li><a href="/tags/Swift-and-Painless/" title="Swift and Painless">Swift and Painless<sup>1</sup></a></li>
+		
 			<li><a href="/tags/Terhechte/" title="Terhechte">Terhechte<sup>1</sup></a></li>
 		
 			<li><a href="/tags/Thomas/" title="Thomas">Thomas<sup>1</sup></a></li>
@@ -363,7 +365,7 @@
 
 
   <div class="rsspart">
-	<a href="null" target="_blank" title="rss">RSS</a>
+	<a href="null" target="_blank" title="rss">RSS 訂閱</a>
 </div>
 
 </aside>

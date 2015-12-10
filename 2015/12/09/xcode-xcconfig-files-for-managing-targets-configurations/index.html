@@ -38,7 +38,7 @@
 				<h1 class="site-name"><a href="/" title="Hexo">Hexo</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -51,7 +51,7 @@
 					
 					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
 						<input type="hidden" name="q" value="site:yoursite.com">
 					</form>
 					
@@ -67,15 +67,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/11/26/xcode-xcconfig-files-for-managing-targets-configurations/" title="Xcode:用于管理多个 target 配置的 XCConfig 文件" itemprop="url">Xcode:用于管理多个 target 配置的 XCConfig 文件</a>
+      <a href="/2015/12/09/xcode-xcconfig-files-for-managing-targets-configurations/" title="Xcode:用于管理多个 target 配置的 XCConfig 文件" itemprop="url">Xcode:用于管理多个 target 配置的 XCConfig 文件</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="[object Object]">[object Object]</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-11-26T05:41:02.745Z" itemprop="datePublished">2015-11-26</time>
-    Updated:<time datetime="2015-11-26T05:40:41.951Z" itemprop="dateModified">2015-11-26</time>
+    <time datetime="2015-12-09T02:12:30.925Z" itemprop="datePublished">2015-12-09</time>
+    更新日期:<time datetime="2015-11-26T05:40:41.951Z" itemprop="dateModified">2015-11-26</time>
     
   </p>
 </header>
@@ -83,7 +83,7 @@
 		
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">Contents</strong>
+			<strong class="toc-title">文章目錄</strong>
 		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#用例"><span class="toc-number">1.</span> <span class="toc-text">用例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#概述"><span class="toc-number">2.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Common-xcconfig"><span class="toc-number">3.</span> <span class="toc-text">Common.xcconfig</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Common-debug_和_Common-release"><span class="toc-number">4.</span> <span class="toc-text">Common.debug 和 Common.release</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PerTarget-xcconfig"><span class="toc-number">5.</span> <span class="toc-text">PerTarget.xcconfig</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#访问变量"><span class="toc-number">6.</span> <span class="toc-text">访问变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li></ol>
 		</div>
 		
@@ -131,7 +131,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2015/11/26/xcode-xcconfig-files-for-managing-targets-configurations/" data-title="Xcode:用于管理多个 target 配置的 XCConfig 文件 | Hexo" data-tsina="null" class="share clearfix">
+  <div data-url="http://yoursite.com/2015/12/09/xcode-xcconfig-files-for-managing-targets-configurations/" data-title="Xcode:用于管理多个 target 配置的 XCConfig 文件 | Hexo" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -141,18 +141,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/11/28/should-you-migrate-objective-c-code-to-swift/" title="你应该把 Objective-C 的代码转为 Swift 吗？">
+ <a href="/2015/12/09/swift-map-and-flatmap/" title="Swift：map 和 flatMap 基础入门">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  你应该把 Objective-C 的代码转为 Swift 吗？</span>
+  Swift：map 和 flatMap 基础入门</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/11/25/implementing-printing-versions-of-try-and-try-on-steroids-in-swiftlang/"  title="Implementing printing versions of try? and try!">
+<a href="/2015/12/09/should-you-migrate-objective-c-code-to-swift/"  title="你应该把 Objective-C 的代码转为 Swift 吗？">
  <strong>NEXT:</strong><br/> 
- <span>Implementing printing versions of try? and try!
+ <span>你应该把 Objective-C 的代码转为 Swift 吗？
 </span>
 </a>
 </div>
@@ -161,27 +161,27 @@
 
 	
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">Contents</strong>
+  <strong class="toc-title">文章目錄</strong>
   <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#用例"><span class="toc-number">1.</span> <span class="toc-text">用例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#概述"><span class="toc-number">2.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Common-xcconfig"><span class="toc-number">3.</span> <span class="toc-text">Common.xcconfig</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Common-debug_和_Common-release"><span class="toc-number">4.</span> <span class="toc-text">Common.debug 和 Common.release</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PerTarget-xcconfig"><span class="toc-number">5.</span> <span class="toc-text">PerTarget.xcconfig</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#访问变量"><span class="toc-number">6.</span> <span class="toc-text">访问变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li></ol>
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">Categories</p>
+	<p class="asidetitle">分類</p>
 		<ul>
 		
 			<li><a href="/categories/3D-Touch/" title="3D Touch">3D Touch<sup>1</sup></a></li>
 		
 			<li><a href="/categories/Swift/" title="Swift">Swift<sup>1</sup></a></li>
 		
-			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>13</sup></a></li>
+			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>14</sup></a></li>
 		
 			<li><a href="/categories/Swift-进阶/" title="Swift 进阶">Swift 进阶<sup>8</sup></a></li>
 		
@@ -197,7 +197,7 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">Tags</p>
+	<p class="asidetitle">標簽</p>
 		<ul class="clearfix">
 		
 			<li><a href="/tags/APPVENTURE/" title="APPVENTURE">APPVENTURE<sup>1</sup></a></li>
@@ -220,6 +220,8 @@
 		
 			<li><a href="/tags/Swift/" title="Swift">Swift<sup>1</sup></a></li>
 		
+			<li><a href="/tags/Swift-and-Painless/" title="Swift and Painless">Swift and Painless<sup>1</sup></a></li>
+		
 			<li><a href="/tags/Terhechte/" title="Terhechte">Terhechte<sup>1</sup></a></li>
 		
 			<li><a href="/tags/Thomas/" title="Thomas">Thomas<sup>1</sup></a></li>
@@ -235,7 +237,7 @@
 
 
   <div class="rsspart">
-	<a href="null" target="_blank" title="rss">RSS</a>
+	<a href="null" target="_blank" title="rss">RSS 訂閱</a>
 </div>
 
 </aside>
