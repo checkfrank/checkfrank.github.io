@@ -4,13 +4,14 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>3D Touch之我见 | Hexo</title>
+    <title>在 iOS8 和 iOS9 中锁定视图自动旋转 | Hexo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="[object Object]">
     
-    <meta name="description" content="原文链接=http://szulctomasz.com/3d-touch-impressions-and-thoughts作者=Tomasz Szulc原文日期=2015-09-26译者=saitjr校对=pmst定稿=千叶知风
-Hey，现在有了支持3D Touch的iPhone和iOS9，这是一项伟大的科技杰作。让我们看看这为开发者和用户都带来了什么呢。本文主要是我对3D Touch的理解，然后列举了一些需要注意的点。">
+    <meta name="description" content="原文链接=http://www.alloc-init.com/2015/11/per-view-auto-rotation-locking-made-easy-for-ios-8-and-9/作者=Weston原文日期=2015/11/18译者=littledogboy校对=numbbbbb定稿=千叶知风
+&lt;!--此处开始正文--&gt;
+这周我在开发一个 App，客户想要此 App 在某些情况下锁定竖屏，某些情况下锁定横屏。幸运的是，我已经在自动布局下创建了所有的视图，因此它们已经支持所需的约束，我仅需要锁定视图旋转。">
     
     
     
@@ -66,15 +67,15 @@ Hey，现在有了支持3D Touch的iPhone和iOS9，这是一项伟大的科技�
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/10/29/3d-touch-impressions-and-thoughts/" title="3D Touch之我见" itemprop="url">3D Touch之我见</a>
+      <a href="/2015/12/16/per-view-auto-rotation-locking-made-easy-for-ios-8-and-9/" title="在 iOS8 和 iOS9 中锁定视图自动旋转" itemprop="url">在 iOS8 和 iOS9 中锁定视图自动旋转</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="[object Object]">[object Object]</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-10-29T05:55:03.325Z" itemprop="datePublished">2015-10-29</time>
-    更新日期:<time datetime="2015-10-22T05:39:13.869Z" itemprop="dateModified">2015-10-22</time>
+    <time datetime="2015-12-16T09:06:03.586Z" itemprop="datePublished">2015-12-16</time>
+    更新日期:<time datetime="2015-12-16T09:04:06.133Z" itemprop="dateModified">2015-12-16</time>
     
   </p>
 </header>
@@ -83,64 +84,51 @@ Hey，现在有了支持3D Touch的iPhone和iOS9，这是一项伟大的科技�
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目錄</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#出师不利"><span class="toc-number">1.</span> <span class="toc-text">出师不利</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Peek_and_pop操作"><span class="toc-number">2.</span> <span class="toc-text">Peek and pop操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快捷操作"><span class="toc-number">3.</span> <span class="toc-text">快捷操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+		
 		</div>
 		
-		<p>原文链接=<a href="http://szulctomasz.com/3d-touch-impressions-and-thoughts" target="_blank" rel="external">http://szulctomasz.com/3d-touch-impressions-and-thoughts</a><br>作者=Tomasz Szulc<br>原文日期=2015-09-26<br>译者=saitjr<br>校对=pmst<br>定稿=千叶知风</p>
-<p>Hey，现在有了支持3D Touch的iPhone和iOS9，这是一项伟大的科技杰作。让我们看看这为开发者和用户都带来了什么呢。本文主要是我对3D Touch的理解，然后列举了一些需要注意的点。<br><a id="more"></a></p>
-<h2 id="出师不利">出师不利</h2><p>本来我想写一篇入门级关于3D Touch的导读文章，但是遇到一个问题——Xcode7的模拟器并不能模拟3D Touch。</p>
-<p>苹果官方的说法是：</p>
-<blockquote>
-<p>Xcode7.0中，你必须使用支持3D Touch的真机进行开发。因为Xcode7.0的模拟器不支持3D Touch。</p>
-</blockquote>
-<p>这是个悲伤的故事，但是又有什么办法呢。我想，苹果应该会想办法模拟出来。可能在下一个Xcode发布版本中就能看到。</p>
-<p>另一个问题则是新的iPhone还没有在波兰发售，可能还要等2周（译者注：作者写文在波兰iPhone发售以前）。</p>
-<p>还有一个办法，我10月要在San Francisco和Palo Alto呆上整整一月，所以我可能会买一部iPhone，但不确定是6s还是6s plus。</p>
-<p>如果买了设备，那我肯定会发布一大波3D Touch的文章。</p>
-<h2 id="Peek_and_pop操作">Peek and pop操作</h2><p>这是苹果介绍3D Touch的第一个特性——或者说是两个特性。</p>
+		<p>原文链接=<a href="http://www.alloc-init.com/2015/11/per-view-auto-rotation-locking-made-easy-for-ios-8-and-9/" target="_blank" rel="external">http://www.alloc-init.com/2015/11/per-view-auto-rotation-locking-made-easy-for-ios-8-and-9/</a><br>作者=Weston<br>原文日期=2015/11/18<br>译者=littledogboy<br>校对=numbbbbb<br>定稿=千叶知风</p>
+<!--此处开始正文-->
+<p>这周我在开发一个 App，客户想要此 App 在某些情况下锁定竖屏，某些情况下锁定横屏。幸运的是，我已经在自动布局下创建了所有的视图，因此它们已经支持所需的约束，我仅需要锁定视图旋转。<br><a id="more"></a></p>
+<p>旋转 API 属于 UIKit 中经常被弃用的内容，因此当我开始旋转工作时，不得不查一下。我还想说，弃用和替换相关的 API 太麻烦了。经过一个小时左右的研究和两个小时的实践，我终于整出了两部分。（译者注：=W=，我当时也搞了好久）</p>
 <ul>
-<li>轻压(peek,轻度按压)操作能让用户在不离开当前界面的情况下预览内容。如果轻按某个选项能够弹出一个小的矩形视图，则表明它支持轻压操作。</li>
-<li>peek手势弹出的视图应该足够大，这样内容就不会被手指挡住，从而用户可以选择是否重压，即pop操作（译者注：peek操作即轻按，用于预览，pop操作则是重压，用于进一步确认。pop能满足在预览之后，进入特定页面的需求）。</li>
-<li>pop则是当用户在peek弹出的视图上加重按压力度，显示更详细的内容。</li>
-<li>即使peek能给用户足够多的信息，你也应该让用户将该操作转化为pop。pop所显示的界面应该和用户点击进入界面相同。</li>
-<li>请勿在peek预览的界面中放入按钮，因为用户手指一离开预览界面，预览界面就会消失，所以根本点不到按钮。</li>
-<li>当用户在预览界面中向上滑动时，peek可以提供一些快捷操作(quick action)。你可以在预览界面中添加一些快捷操作，这样用户就可以上滑，然后选择一个你所提供的操作了。</li>
-<li>如果你为某个选项提供了长按手势事件(touch-and-hold，或者叫long press)，那么你可以用peek来代替长按手势，这是一个很好的尝试。</li>
-<li>如果你想使用快捷操作、peek和pop，那么记住在使用前先判断3D Touch是否可用。</li>
-<li>不是每个设备都支持peek和pop操作的，并且3D Touch也可能处于禁用状态。所以不要让某些事件只能由peek来触发。最好有一个备选方案，即视图也能通过长按手势来展示。</li>
+<li>选中 <code>Info.plist</code> 文件中所有你想要支持的旋转方向。</li>
 </ul>
-<h2 id="快捷操作">快捷操作</h2><p>接下来，介绍一些用户在重压应用图标时的一些快捷操作。</p>
+<p><img src="http://www.alloc-init.com/wp-content/uploads/2015/11/InterfaceOrientation.png" alt=""></p>
 <ul>
-<li>弹出框包含了主标题、副标题与图标。</li>
-<li>该操作可以在应用程序更新时，显示更新信息。</li>
-<li>你的应用在Home界面中，应该至少提供一个快捷选项。这样用户就可以使用手势操作你的应用，方便快捷。</li>
-<li>医用最多可以提供四个快捷操作。</li>
-<li>不要使用快捷操作来提醒用户更新、变更之类的事。如有需要，通知(<em>Notifications</em>)更能胜任这些任务。</li>
-<li>快捷操作的命名应该简洁，如有需要，还应该有副标题和图标。尽量让用户明确该操作的作用。如果提供了副标题，那么标题栏将会更长，如果大小不能适应，系统会自动截取。如果没有副标题，那么主标题过长会自动换行。</li>
+<li>然后我们仅需要实现一个方法。</li>
 </ul>
-<h2 id="总结">总结</h2><p>3D Touch是一个非常爽的特性，它提供了全新的交互方式。设备中包含了一个线性振动器(Taptic Engine)，所以按压屏幕时，设备能有一定响应——太好了，迫不及待想要试试。</p>
-<p>非常遗憾，苹果没有在最新的Xcode 7 beta 2中解决无法模拟的问题，还是希望他们尽快搞定吧——或许他们不修复是为了增加销量，因为用户已经迫不及待的想要试试这个新特性了，而最简单粗暴的方式，就是买个新设备 :D。</p>
-<p>我已经迫不及待的想要尝试基于3D Touch的应用了，如游戏和画图，还有一些我想象不到的应用。或许还可以看到计量重量的应用，比如称一个水果的重量，或是一个放置在屏幕上的物体的重量等等 :&gt;。</p>
+<p>Swift 1.2</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">supportedInterfaceOrientations</span><span class="params">()</span></span> -&gt; <span class="type">Int</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="type">Int</span>(<span class="type">UIInterfaceOrientationMask</span>.<span class="type">Portrait</span>.rawValue)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Swift 2.0</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">supportedInterfaceOrientations</span><span class="params">()</span></span> -&gt; <span class="type">UIInterfaceOrientationMask</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="type">UIInterfaceOrientationMask</span>.<span class="type">Portrait</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>确保选中你想要锁定的方向是横屏还是竖屏。</p>
+<p>这可能是我最近看到过的最乱的接口改动，并且我花了好长时间才意识到我在 Swift 1.2 中犯下的错误。（那个 Int cast 太丑了）</p>
+<p><a href="http://www.alloc-init.com/wp-content/uploads/2015/11/RotationTest.zip" target="_blank" rel="external">Sample Code</a> (Swift 1.2 Project)</p>
+<p><strong>Update 11/18/2015:</strong></p>
+<p>我刚刚意识到,我标题有点词不达意。</p>
+<p><strong>“使用一个小技巧锁定视图控制器”</strong></p>
+<p>好吧，下不为例。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Tomasz-Szulc/">Tomasz Szulc</a>
+  <span></span> <a href="/tags/Swift-入门/">Swift 入门</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/3D-Touch/">3D Touch</a>
+  <a class="article-category-link" href="/categories/Thomas/">Thomas</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2015/10/29/3d-touch-impressions-and-thoughts/" data-title="3D Touch之我见 | Hexo" data-tsina="null" class="share clearfix">
+  <div data-url="http://yoursite.com/2015/12/16/per-view-auto-rotation-locking-made-easy-for-ios-8-and-9/" data-title="在 iOS8 和 iOS9 中锁定视图自动旋转 | Hexo" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -150,18 +138,18 @@ Hey，现在有了支持3D Touch的iPhone和iOS9，这是一项伟大的科技�
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/11/05/if-let-assignment/" title="If-Let 赋值运算符">
+ <a href="/2015/12/16/watchconnectivity-say-hello-to-wcsession/" title="WatchConnectivity：学习 WCSession">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  If-Let 赋值运算符</span>
+  WatchConnectivity：学习 WCSession</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/10/27/swift-using-local-closures/"  title="Swift：使用本地闭包">
+<a href="/2015/12/15/mixins-over-inheritance/"  title="Mixins 比继承更好">
  <strong>NEXT:</strong><br/> 
- <span>Swift：使用本地闭包
+ <span>Mixins 比继承更好
 </span>
 </a>
 </div>
@@ -174,7 +162,7 @@ Hey，现在有了支持3D Touch的iPhone和iOS9，这是一项伟大的科技�
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目錄</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#出师不利"><span class="toc-number">1.</span> <span class="toc-text">出师不利</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Peek_and_pop操作"><span class="toc-number">2.</span> <span class="toc-text">Peek and pop操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#快捷操作"><span class="toc-number">3.</span> <span class="toc-text">快捷操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+  
   </div>
 
 <div id="asidepart">
