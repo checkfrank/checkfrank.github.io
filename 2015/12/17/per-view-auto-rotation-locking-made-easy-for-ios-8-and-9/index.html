@@ -9,7 +9,7 @@
     
     <meta name="author" content="[object Object]">
     
-    <meta name="description" content="原文链接=http://www.alloc-init.com/2015/11/per-view-auto-rotation-locking-made-easy-for-ios-8-and-9/作者=Weston原文日期=2015/11/18译者=littledogboy校对=numbbbbb定稿=千叶知风
+    <meta name="description" content="原文链接=http://www.alloc-init.com/2015/11/per-view-auto-rotation-locking-made-easy-for-ios-8-and-9/作者=Thomas Weston原文日期=2015/11/18译者=littledogboy校对=numbbbbb定稿=千叶知风
 &lt;!--此处开始正文--&gt;
 这周我在开发一个 App，客户想要此 App 在某些情况下锁定竖屏，某些情况下锁定横屏。幸运的是，我已经在自动布局下创建了所有的视图，因此它们已经支持所需的约束，我仅需要锁定视图旋转。">
     
@@ -38,7 +38,7 @@
 				<h1 class="site-name"><a href="/" title="Hexo">Hexo</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -51,7 +51,7 @@
 					
 					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
 						<input type="hidden" name="q" value="site:yoursite.com">
 					</form>
 					
@@ -67,15 +67,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/12/16/per-view-auto-rotation-locking-made-easy-for-ios-8-and-9/" title="在 iOS8 和 iOS9 中锁定视图自动旋转" itemprop="url">在 iOS8 和 iOS9 中锁定视图自动旋转</a>
+      <a href="/2015/12/17/per-view-auto-rotation-locking-made-easy-for-ios-8-and-9/" title="在 iOS8 和 iOS9 中锁定视图自动旋转" itemprop="url">在 iOS8 和 iOS9 中锁定视图自动旋转</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="[object Object]">[object Object]</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-12-16T09:06:03.586Z" itemprop="datePublished">2015-12-16</time>
-    更新日期:<time datetime="2015-12-16T09:04:06.133Z" itemprop="dateModified">2015-12-16</time>
+    <time datetime="2015-12-17T02:17:44.990Z" itemprop="datePublished">2015-12-17</time>
+    Updated:<time datetime="2015-12-17T02:17:44.990Z" itemprop="dateModified">2015-12-17</time>
     
   </p>
 </header>
@@ -83,11 +83,11 @@
 		
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目錄</strong>
+			<strong class="toc-title">Contents</strong>
 		
 		</div>
 		
-		<p>原文链接=<a href="http://www.alloc-init.com/2015/11/per-view-auto-rotation-locking-made-easy-for-ios-8-and-9/" target="_blank" rel="external">http://www.alloc-init.com/2015/11/per-view-auto-rotation-locking-made-easy-for-ios-8-and-9/</a><br>作者=Weston<br>原文日期=2015/11/18<br>译者=littledogboy<br>校对=numbbbbb<br>定稿=千叶知风</p>
+		<p>原文链接=<a href="http://www.alloc-init.com/2015/11/per-view-auto-rotation-locking-made-easy-for-ios-8-and-9/" target="_blank" rel="external">http://www.alloc-init.com/2015/11/per-view-auto-rotation-locking-made-easy-for-ios-8-and-9/</a><br>作者=Thomas Weston<br>原文日期=2015/11/18<br>译者=littledogboy<br>校对=numbbbbb<br>定稿=千叶知风</p>
 <!--此处开始正文-->
 <p>这周我在开发一个 App，客户想要此 App 在某些情况下锁定竖屏，某些情况下锁定横屏。幸运的是，我已经在自动布局下创建了所有的视图，因此它们已经支持所需的约束，我仅需要锁定视图旋转。<br><a id="more"></a></p>
 <p>旋转 API 属于 UIKit 中经常被弃用的内容，因此当我开始旋转工作时，不得不查一下。我还想说，弃用和替换相关的 API 太麻烦了。经过一个小时左右的研究和两个小时的实践，我终于整出了两部分。（译者注：=W=，我当时也搞了好久）</p>
@@ -115,20 +115,20 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Swift-入门/">Swift 入门</a>
+  <span></span> <a href="/tags/Thomas-Weston/">Thomas Weston</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Thomas/">Thomas</a>
+  <a class="article-category-link" href="/categories/Swift-入门/">Swift 入门</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2015/12/16/per-view-auto-rotation-locking-made-easy-for-ios-8-and-9/" data-title="在 iOS8 和 iOS9 中锁定视图自动旋转 | Hexo" data-tsina="null" class="share clearfix">
+  <div data-url="http://yoursite.com/2015/12/17/per-view-auto-rotation-locking-made-easy-for-ios-8-and-9/" data-title="在 iOS8 和 iOS9 中锁定视图自动旋转 | Hexo" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -138,18 +138,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/12/16/watchconnectivity-say-hello-to-wcsession/" title="WatchConnectivity：学习 WCSession">
+ <a href="/2015/12/26/friday-qa-2015-12-11-swift-weak-references/" title="Friday Q&amp;A 2015-12-11：Swift 中的弱引用">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  WatchConnectivity：学习 WCSession</span>
+  Friday Q&amp;A 2015-12-11：Swift 中的弱引用</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/12/15/mixins-over-inheritance/"  title="Mixins 比继承更好">
+<a href="/2015/12/17/changing-swift-whats-coming-up-in-2-2-and-3-0/"  title="Swift 的变化：从 2.2 到 3.0 会带来什么">
  <strong>NEXT:</strong><br/> 
- <span>Mixins 比继承更好
+ <span>Swift 的变化：从 2.2 到 3.0 会带来什么
 </span>
 </a>
 </div>
@@ -158,37 +158,35 @@
 
 	
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目錄</strong>
+  <strong class="toc-title">Contents</strong>
   
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
 <aside class="clearfix">
 
   
 <div class="categorieslist">
-	<p class="asidetitle">分類</p>
+	<p class="asidetitle">Categories</p>
 		<ul>
 		
 			<li><a href="/categories/3D-Touch/" title="3D Touch">3D Touch<sup>1</sup></a></li>
 		
-			<li><a href="/categories/Swift/" title="Swift">Swift<sup>1</sup></a></li>
+			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>16</sup></a></li>
 		
-			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>12</sup></a></li>
-		
-			<li><a href="/categories/Swift-进阶/" title="Swift 进阶">Swift 进阶<sup>9</sup></a></li>
-		
-			<li><a href="/categories/Thomas/" title="Thomas">Thomas<sup>1</sup></a></li>
+			<li><a href="/categories/Swift-进阶/" title="Swift 进阶">Swift 进阶<sup>12</sup></a></li>
 		
 			<li><a href="/categories/WatchOS-2/" title="WatchOS 2">WatchOS 2<sup>3</sup></a></li>
 		
-			<li><a href="/categories/Swift-入门/WatchOS-2/" title="WatchOS 2">WatchOS 2<sup>0</sup></a></li>
-		
 			<li><a href="/categories/Xcode/" title="Xcode">Xcode<sup>1</sup></a></li>
+		
+			<li><a href="/categories/iOS-开发/" title="iOS 开发">iOS 开发<sup>1</sup></a></li>
+		
+			<li><a href="/categories/iOS开发/" title="iOS开发">iOS开发<sup>2</sup></a></li>
 		
 		</ul>
 </div>
@@ -196,38 +194,44 @@
 
   
 <div class="tagslist">
-	<p class="asidetitle">標簽</p>
+	<p class="asidetitle">Tags</p>
 		<ul class="clearfix">
 		
 			<li><a href="/tags/APPVENTURE/" title="APPVENTURE">APPVENTURE<sup>1</sup></a></li>
 		
-			<li><a href="/tags/AppCoda/" title="AppCoda">AppCoda<sup>1</sup></a></li>
+			<li><a href="/tags/AppCoda/" title="AppCoda">AppCoda<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Apple/" title="Apple">Apple<sup>1</sup></a></li>
 		
 			<li><a href="/tags/Benedikt-Terhechte/" title="Benedikt Terhechte">Benedikt Terhechte<sup>1</sup></a></li>
 		
 			<li><a href="/tags/Crunchy-Development/" title="Crunchy Development">Crunchy Development<sup>2</sup></a></li>
 		
-			<li><a href="/tags/Erica-Sadun/" title="Erica Sadun">Erica Sadun<sup>5</sup></a></li>
+			<li><a href="/tags/Erica-Sadun/" title="Erica Sadun">Erica Sadun<sup>7</sup></a></li>
+		
+			<li><a href="/tags/IOSCREATOR/" title="IOSCREATOR">IOSCREATOR<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Jacob-Bandes-Storch/" title="Jacob Bandes-Storch">Jacob Bandes-Storch<sup>1</sup></a></li>
 		
 			<li><a href="/tags/Jameson-Quave/" title="Jameson Quave">Jameson Quave<sup>1</sup></a></li>
 		
-			<li><a href="/tags/Natasha-The-Robot/" title="Natasha The Robot">Natasha The Robot<sup>3</sup></a></li>
+			<li><a href="/tags/Mike-Ash/" title="Mike Ash">Mike Ash<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Natasha-The-Robot/" title="Natasha The Robot">Natasha The Robot<sup>4</sup></a></li>
 		
 			<li><a href="/tags/Ole-Begemann/" title="Ole Begemann">Ole Begemann<sup>1</sup></a></li>
 		
 			<li><a href="/tags/Raj-Kandathi/" title="Raj Kandathi">Raj Kandathi<sup>1</sup></a></li>
 		
-			<li><a href="/tags/Swift/" title="Swift">Swift<sup>1</sup></a></li>
-		
-			<li><a href="/tags/Swift-and-Painless/" title="Swift and Painless">Swift and Painless<sup>1</sup></a></li>
-		
-			<li><a href="/tags/Swift-入门/" title="Swift 入门">Swift 入门<sup>1</sup></a></li>
+			<li><a href="/tags/Swift-and-Painless/" title="Swift and Painless">Swift and Painless<sup>2</sup></a></li>
 		
 			<li><a href="/tags/Terhechte/" title="Terhechte">Terhechte<sup>1</sup></a></li>
 		
 			<li><a href="/tags/Thomas/" title="Thomas">Thomas<sup>1</sup></a></li>
 		
 			<li><a href="/tags/Thomas-Hanning/" title="Thomas Hanning">Thomas Hanning<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Thomas-Weston/" title="Thomas Weston">Thomas Weston<sup>1</sup></a></li>
 		
 			<li><a href="/tags/Tomasz-Szulc/" title="Tomasz Szulc">Tomasz Szulc<sup>3</sup></a></li>
 		
@@ -238,7 +242,7 @@
 
 
   <div class="rsspart">
-	<a href="null" target="_blank" title="rss">RSS 訂閱</a>
+	<a href="null" target="_blank" title="rss">RSS</a>
 </div>
 
 </aside>
@@ -259,7 +263,7 @@
 		
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
 		
 		<a href="http://yoursite.com" target="_blank" title="[object Object]">[object Object]</a>
 		

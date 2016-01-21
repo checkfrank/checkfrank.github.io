@@ -1,0 +1,379 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>在团队开发中使用 CocoaPods 的小技巧 | Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="[object Object]">
+    
+    <meta name="description" content="原文链接=http://natashatherobot.com/cocoapods-on-a-team/作者=Natasha The Robot原文日期=2015/12/18译者=JackAlan校对=Cee定稿=千叶知风
+&lt;!--此处开始正文--&gt;
+在我工作的一个团队中，我们有很多关于安装 CocoaPods 的问题。团队成员拥有不同的 cocoapods gem 的安装版本，并且当有人运行 pod install 时，会将事情搞得一团糟。
+我们最终不得不委托一人安装 CocoaPods，并且把工程推到 GitHub 上以供我们使用。这显然是不够灵活的，并且对于我们团队或者是委托人来说都不是一个很满意的解决方式。">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="Hexo" title="Hexo"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Hexo">Hexo</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/31/cocoapods-on-a-team/" title="在团队开发中使用 CocoaPods 的小技巧" itemprop="url">在团队开发中使用 CocoaPods 的小技巧</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="[object Object]">[object Object]</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-12-31T01:07:34.229Z" itemprop="datePublished">2015-12-31</time>
+    Updated:<time datetime="2015-12-31T01:00:43.015Z" itemprop="dateModified">2015-12-31</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+		</div>
+		
+		<p>原文链接=<a href="http://natashatherobot.com/cocoapods-on-a-team/" target="_blank" rel="external">http://natashatherobot.com/cocoapods-on-a-team/</a><br>作者=Natasha The Robot<br>原文日期=2015/12/18<br>译者=JackAlan<br>校对=Cee<br>定稿=千叶知风</p>
+<!--此处开始正文-->
+<p>在我工作的一个团队中，我们有很多关于安装 CocoaPods 的问题。团队成员拥有不同的 <code>cocoapods gem</code> 的安装版本，并且当有人运行 <code>pod install</code> 时，会将事情搞得一团糟。</p>
+<p>我们最终不得不委托一人安装 CocoaPods，并且把工程推到 GitHub 上以供我们使用。这显然是不够灵活的，并且对于我们团队或者是委托人来说都不是一个很满意的解决方式。<br><a id="more"></a></p>
+<p>我跟 <a href="https://twitter.com/NeoNacho" target="_blank" rel="external">@NeoNacho</a> 提到了这个问题，他是 CocoaPods 的核心贡献者，并且他提供了我们急需的那个解决方案。使用 <code>Gemfile</code>！</p>
+<p>你可以在 <code>Gemfile</code> 中指定 <code>cocoapods gem</code> 的使用版本。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">source <span class="string">'https://rubygems.org'</span></span><br><span class="line"></span><br><span class="line">gem <span class="string">'cocoapods'</span>, <span class="string">'0.39.0'</span></span><br></pre></td></tr></table></figure>
+<p>（译者注：在大天朝还是换成 <code>source &#39;https://ruby.taobao.org&#39;</code> 这个吧。）</p>
+<p>当你更新了 Gemfile 文件并且自动安装了正确版本的 gem 后，确保团队的每个成员都运行一次 <code>bundle install</code> 这条命令。</p>
+<p>此后，只需要运行 <code>bundle exec pod install</code> 这条命令来安装新的 CocoaPods——这将会确保通过你在的 Gemfile 中指定 <code>cocoapods gem</code> 的版本后，<code>pods</code> 仍可以被正确的安装。</p>
+<p>感谢 <a href="https://twitter.com/NeoNacho" target="_blank" rel="external">@NeoNacho</a> 提供的小技巧。</p>
+<p><strong>更新</strong>：获取更多如何在项目中使用 <code>Gemfile</code> 的信息，请参阅 <a href="https://guides.cocoapods.org/using/a-gemfile.html" target="_blank" rel="external">Cocoapods Guide on Using a Gemfile</a>。感谢 <a href="https://twitter.com/orta/status/677972879988932608" target="_blank" rel="external">@orta</a>！</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Natasha-The-Robot/">Natasha The Robot</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/iOS开发/">iOS开发</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/12/31/cocoapods-on-a-team/" data-title="在团队开发中使用 CocoaPods 的小技巧 | Hexo" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/12/31/editable-text-field-alert-controller-tutorial/" title="Alert Controller 中实现可编辑文本字输入框教程">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Alert Controller 中实现可编辑文本字输入框教程</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/12/26/friday-qa-2015-12-11-swift-weak-references/"  title="Friday Q&amp;A 2015-12-11：Swift 中的弱引用">
+ <strong>NEXT:</strong><br/> 
+ <span>Friday Q&amp;A 2015-12-11：Swift 中的弱引用
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+			<li><a href="/categories/3D-Touch/" title="3D Touch">3D Touch<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>16</sup></a></li>
+		
+			<li><a href="/categories/Swift-进阶/" title="Swift 进阶">Swift 进阶<sup>12</sup></a></li>
+		
+			<li><a href="/categories/WatchOS-2/" title="WatchOS 2">WatchOS 2<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Xcode/" title="Xcode">Xcode<sup>1</sup></a></li>
+		
+			<li><a href="/categories/iOS-开发/" title="iOS 开发">iOS 开发<sup>1</sup></a></li>
+		
+			<li><a href="/categories/iOS开发/" title="iOS开发">iOS开发<sup>2</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/APPVENTURE/" title="APPVENTURE">APPVENTURE<sup>1</sup></a></li>
+		
+			<li><a href="/tags/AppCoda/" title="AppCoda">AppCoda<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Apple/" title="Apple">Apple<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Benedikt-Terhechte/" title="Benedikt Terhechte">Benedikt Terhechte<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Crunchy-Development/" title="Crunchy Development">Crunchy Development<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Erica-Sadun/" title="Erica Sadun">Erica Sadun<sup>7</sup></a></li>
+		
+			<li><a href="/tags/IOSCREATOR/" title="IOSCREATOR">IOSCREATOR<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Jacob-Bandes-Storch/" title="Jacob Bandes-Storch">Jacob Bandes-Storch<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Jameson-Quave/" title="Jameson Quave">Jameson Quave<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Mike-Ash/" title="Mike Ash">Mike Ash<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Natasha-The-Robot/" title="Natasha The Robot">Natasha The Robot<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Ole-Begemann/" title="Ole Begemann">Ole Begemann<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Raj-Kandathi/" title="Raj Kandathi">Raj Kandathi<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swift-and-Painless/" title="Swift and Painless">Swift and Painless<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Terhechte/" title="Terhechte">Terhechte<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thomas/" title="Thomas">Thomas<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thomas-Hanning/" title="Thomas Hanning">Thomas Hanning<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Thomas-Weston/" title="Thomas Weston">Thomas Weston<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Tomasz-Szulc/" title="Tomasz Szulc">Tomasz Szulc<sup>3</sup></a></li>
+		
+			<li><a href="/tags/ericasadun/" title="ericasadun">ericasadun<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://yoursite.com" target="_blank" title="[object Object]">[object Object]</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

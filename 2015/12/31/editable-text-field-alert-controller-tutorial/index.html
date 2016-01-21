@@ -1,0 +1,391 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Alert Controller 中实现可编辑文本字输入框教程 | Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="[object Object]">
+    
+    <meta name="description" content="原文链接=http://www.ioscreator.com/tutorials/editable-text-field-alert-controller-tutorial作者=Arthur Knopper原文日期=2015-12-21译者=pmst校对=Cee定稿=千叶知风
+&lt;!--此处开始正文--&gt;
+UIAlertController 类不仅用于呈现警告弹窗，还能够提供 Text Fields 来获取文本信息输入。本教程演示了从用户处获取账号和密码，并打印到终端中。此教程开发环境为 Xcode 7.2 以及 iOS 9。
+打开X code，创建一个 Single View Application。输入项目名称：IOS9TextFieldAlertControllerTutorial，接着填写你独有的 Organization Name 以及 Organization Identifier。选择语言为 Swift 并确保设备为 iPhone 。">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="Hexo" title="Hexo"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Hexo">Hexo</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/12/31/editable-text-field-alert-controller-tutorial/" title="Alert Controller 中实现可编辑文本字输入框教程" itemprop="url">Alert Controller 中实现可编辑文本字输入框教程</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="[object Object]">[object Object]</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-12-31T01:37:36.780Z" itemprop="datePublished">2015-12-31</time>
+    Updated:<time datetime="2015-12-31T01:35:54.962Z" itemprop="dateModified">2015-12-31</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+		</div>
+		
+		<p>原文链接=<a href="http://www.ioscreator.com/tutorials/editable-text-field-alert-controller-tutorial" target="_blank" rel="external">http://www.ioscreator.com/tutorials/editable-text-field-alert-controller-tutorial</a><br>作者=Arthur Knopper<br>原文日期=2015-12-21<br>译者=pmst<br>校对=Cee<br>定稿=千叶知风</p>
+<!--此处开始正文-->
+<p>UIAlertController 类不仅用于呈现警告弹窗，还能够提供 Text Fields 来获取文本信息输入。本教程演示了从用户处获取账号和密码，并打印到终端中。此教程开发环境为 Xcode 7.2 以及 iOS 9。</p>
+<p>打开X code，创建一个 Single View Application。输入项目名称：<strong>IOS9TextFieldAlertControllerTutorial</strong>，接着填写你独有的 Organization Name 以及 Organization Identifier。选择语言为 Swift 并确保设备为 iPhone 。<br><a id="more"></a></p>
+<p><img src="http://static1.squarespace.com/static/52428a0ae4b0c4a5c2a2cede/t/5671c6fcdc5cb4b9e2d47211/1450297086442/?format=1500w" alt=""></p>
+<p>前往 Storyboard。从 Object Library（译者注：快捷键 Command + Option + Control + 3） 中拖拽一个按钮（UIButton）到主视图中。双击按钮设置 title 名为 「Log in」。此刻保持按钮为选中状态，按下 Ctrl 键，使用鼠标左键拖拽一条线到主视图上方，弹出黑色信息框，使用 Shift 键选中「Vertical Spacing to Top Layout Guide」和「Center Horizontally in Container」两个选项。</p>
+<p><img src="http://static1.squarespace.com/static/52428a0ae4b0c4a5c2a2cede/t/567408d5d8af10a9411357c8/1450445013749/" alt=""></p>
+<p>Storyboard 应该是这个样子的。</p>
+<p><img src="http://static1.squarespace.com/static/52428a0ae4b0c4a5c2a2cede/t/5671c787cbced6829d5ed1df/1450297224773/?format=1500w" alt=""></p>
+<p>（译者注：也许你的界面呈现了黄色约束警告，你需要使用 Command + Option + = 快捷键来更新下。）</p>
+<p>选中 Assistant Editor ，确保 <strong>ViewControllers.swift</strong> 可见。选中按钮使用 Ctrl + 左键拖拽方式创建如下 Action。</p>
+<p><img src="http://static1.squarespace.com/static/52428a0ae4b0c4a5c2a2cede/t/5671cb5ebfe8739f7af12ea5/1450298206884/?format=750w" alt=""></p>
+<p>在 <strong>ViewController</strong> 类中实现 <strong>login</strong> 方法：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">@IBAction</span> <span class="func"><span class="keyword">func</span> <span class="title">login</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">    <span class="comment">// 1.</span></span><br><span class="line">    <span class="keyword">var</span> usernameTextField: <span class="type">UITextField</span>?</span><br><span class="line">    <span class="keyword">var</span> passwordTextField: <span class="type">UITextField</span>?</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2.  </span></span><br><span class="line">    <span class="keyword">let</span> alertController = <span class="type">UIAlertController</span>(</span><br><span class="line">      title: <span class="string">"Log in"</span>,</span><br><span class="line">      message: <span class="string">"Please enter your credentials"</span>,</span><br><span class="line">      preferredStyle: <span class="type">UIAlertControllerStyle</span>.<span class="type">Alert</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 3.  </span></span><br><span class="line">    <span class="keyword">let</span> loginAction = <span class="type">UIAlertAction</span>(</span><br><span class="line">      title: <span class="string">"Log in"</span>, style: <span class="type">UIAlertActionStyle</span>.<span class="type">Default</span>) &#123;</span><br><span class="line">        (action) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">        </span><br><span class="line">          <span class="keyword">if</span> <span class="keyword">let</span> username = usernameTextField?.text &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">" Username = <span class="subst">\(username)</span>"</span>)</span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"No Username entered"</span>)</span><br><span class="line">          &#125;</span><br><span class="line">        </span><br><span class="line">          <span class="keyword">if</span> <span class="keyword">let</span> password = passwordTextField?.text &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"Password = <span class="subst">\(password)</span>"</span>)</span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"No password entered"</span>)</span><br><span class="line">          &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 4.</span></span><br><span class="line">    alertController.addTextFieldWithConfigurationHandler &#123;</span><br><span class="line">      (txtUsername) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">        usernameTextField = txtUsername</span><br><span class="line">        usernameTextField!.placeholder = <span class="string">"&lt;Your username here&gt;"</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    alertController.addTextFieldWithConfigurationHandler &#123;</span><br><span class="line">      (txtPassword) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">        passwordTextField = txtPassword</span><br><span class="line">        passwordTextField!.secureTextEntry = <span class="literal">true</span></span><br><span class="line">        passwordTextField!.placeholder = <span class="string">"&lt;Your password here&gt;"</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 5.</span></span><br><span class="line">    alertController.addAction(loginAction)</span><br><span class="line">    <span class="keyword">self</span>.presentViewController(alertController, animated: <span class="literal">true</span>, completion: <span class="literal">nil</span>)</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>创建两个可选类型的 UITextField 变量用于警告弹窗。</li>
+<li>创建一个 Alert 样式的 AlertController。</li>
+<li>创建一个 Alert Action，闭包体中执行如下行为：将 textField 输入的信息打印到终端中。</li>
+<li>addTextFieldWithConfigurationHandler 方法用于添加文本输入框（text input fields），闭包接收 Text Filed 作为参数变量。</li>
+<li>将登录动作添加到 AlertController 中，同时呈现该控制器。</li>
+</ol>
+<p><strong>构建并运行</strong>该工程，点击 Login 按钮，填充 AlertController 中的 username 和 password 字段。输入内容随之打印到终端中。</p>
+<p><img src="http://static1.squarespace.com/static/52428a0ae4b0c4a5c2a2cede/t/5671cb93bfe8739f7af131e9/1450298260884/?format=1500w" alt=""></p>
+<p>你可以前往 ioscreator 的 GitHub 仓库下载 <a href="https://github.com/ioscreator/ioscreator" target="_blank" rel="external">IOS9TextFieldAlertControllerTutorial</a> 源代码。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/IOSCREATOR/">IOSCREATOR</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/iOS开发/">iOS开发</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/12/31/editable-text-field-alert-controller-tutorial/" data-title="Alert Controller 中实现可编辑文本字输入框教程 | Hexo" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/01/07/ios-concurrency-getting-started-with-nsoperation-and-dispatch-queues/" title="iOS 并发：从 NSOperation 和 Dispatch Queues 开始">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  iOS 并发：从 NSOperation 和 Dispatch Queues 开始</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/12/31/cocoapods-on-a-team/"  title="在团队开发中使用 CocoaPods 的小技巧">
+ <strong>NEXT:</strong><br/> 
+ <span>在团队开发中使用 CocoaPods 的小技巧
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+			<li><a href="/categories/3D-Touch/" title="3D Touch">3D Touch<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>16</sup></a></li>
+		
+			<li><a href="/categories/Swift-进阶/" title="Swift 进阶">Swift 进阶<sup>12</sup></a></li>
+		
+			<li><a href="/categories/WatchOS-2/" title="WatchOS 2">WatchOS 2<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Xcode/" title="Xcode">Xcode<sup>1</sup></a></li>
+		
+			<li><a href="/categories/iOS-开发/" title="iOS 开发">iOS 开发<sup>1</sup></a></li>
+		
+			<li><a href="/categories/iOS开发/" title="iOS开发">iOS开发<sup>2</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/APPVENTURE/" title="APPVENTURE">APPVENTURE<sup>1</sup></a></li>
+		
+			<li><a href="/tags/AppCoda/" title="AppCoda">AppCoda<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Apple/" title="Apple">Apple<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Benedikt-Terhechte/" title="Benedikt Terhechte">Benedikt Terhechte<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Crunchy-Development/" title="Crunchy Development">Crunchy Development<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Erica-Sadun/" title="Erica Sadun">Erica Sadun<sup>7</sup></a></li>
+		
+			<li><a href="/tags/IOSCREATOR/" title="IOSCREATOR">IOSCREATOR<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Jacob-Bandes-Storch/" title="Jacob Bandes-Storch">Jacob Bandes-Storch<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Jameson-Quave/" title="Jameson Quave">Jameson Quave<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Mike-Ash/" title="Mike Ash">Mike Ash<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Natasha-The-Robot/" title="Natasha The Robot">Natasha The Robot<sup>4</sup></a></li>
+		
+			<li><a href="/tags/Ole-Begemann/" title="Ole Begemann">Ole Begemann<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Raj-Kandathi/" title="Raj Kandathi">Raj Kandathi<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swift-and-Painless/" title="Swift and Painless">Swift and Painless<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Terhechte/" title="Terhechte">Terhechte<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thomas/" title="Thomas">Thomas<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thomas-Hanning/" title="Thomas Hanning">Thomas Hanning<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Thomas-Weston/" title="Thomas Weston">Thomas Weston<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Tomasz-Szulc/" title="Tomasz Szulc">Tomasz Szulc<sup>3</sup></a></li>
+		
+			<li><a href="/tags/ericasadun/" title="ericasadun">ericasadun<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://yoursite.com" target="_blank" title="[object Object]">[object Object]</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>
