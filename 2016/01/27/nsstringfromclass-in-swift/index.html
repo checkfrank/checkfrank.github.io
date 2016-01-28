@@ -4,14 +4,15 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>你应该把 Objective-C 的代码转为 Swift 吗？ | Hexo</title>
+    <title>优雅的 NSStringFromClass 替代方案 | Hexo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="[object Object]">
     
-    <meta name="description" content="原文链接=http://www.thomashanning.com/should-you-migrate-objective-c-code-to-swift/作者=Thomas原文日期=2015/11/23译者=王亚珂校对=千叶知风定稿=
+    <meta name="description" content="原文链接=https://www.natashatherobot.com/nsstringfromclass-in-swift/作者=Natasha The Robot原文日期=2016-01-14译者=saitjr校对=千叶知风定稿=
 &lt;!--此处开始正文--&gt;
-你应该把 Objective-C 的代码转为 Swift 吗？未来是 swift 的，但是这就意味着你需要把 Objective-C 的代码都转为 Swift 吗？">
+使用 Swift 过程中，我意识到的第一个问题就是没有 NSStringFromClass 的替代方案。在自定义 TableViewCell 时，我喜欢用类名作为 cell 的 identifier，然后在重用队列中，通过 NSStringFromClass 来获得 identifier，从而避免拼写错误。
+然而，在 Swift 中，我不得不写一个丑陋的 extension 来达到这一目的。（参考 StackOverflow 的回答）">
     
     
     
@@ -67,15 +68,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/12/09/should-you-migrate-objective-c-code-to-swift/" title="你应该把 Objective-C 的代码转为 Swift 吗？" itemprop="url">你应该把 Objective-C 的代码转为 Swift 吗？</a>
+      <a href="/2016/01/27/nsstringfromclass-in-swift/" title="优雅的 NSStringFromClass 替代方案" itemprop="url">优雅的 NSStringFromClass 替代方案</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="[object Object]">[object Object]</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-12-09T02:12:02.146Z" itemprop="datePublished">2015-12-09</time>
-    Updated:<time datetime="2015-11-28T06:21:59.508Z" itemprop="dateModified">2015-11-28</time>
+    <time datetime="2016-01-27T05:06:30.405Z" itemprop="datePublished">2016-01-27</time>
+    Updated:<time datetime="2016-01-27T05:05:51.566Z" itemprop="dateModified">2016-01-27</time>
     
   </p>
 </header>
@@ -84,42 +85,40 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#你应该把_Objective-C_的代码转为_Swift_吗？"><span class="toc-number">1.</span> <span class="toc-text">你应该把 Objective-C 的代码转为 Swift 吗？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#选择一：不转代码坚持使用_Objective-C"><span class="toc-number">1.1.</span> <span class="toc-text">选择一：不转代码坚持使用 Objective-C</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择二：将_Objective-C_的代码转为_Swift"><span class="toc-number">1.2.</span> <span class="toc-text">选择二：将 Objective-C 的代码转为 Swift</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择三：将新的代码用_Swift_来写"><span class="toc-number">1.3.</span> <span class="toc-text">选择三：将新的代码用 Swift 来写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结论"><span class="toc-number">1.4.</span> <span class="toc-text">结论</span></a></li></ol></li></ol>
+		
 		</div>
 		
-		<p>原文链接=<a href="http://www.thomashanning.com/should-you-migrate-objective-c-code-to-swift/" target="_blank" rel="external">http://www.thomashanning.com/should-you-migrate-objective-c-code-to-swift/</a><br>作者=Thomas<br>原文日期=2015/11/23<br>译者=王亚珂<br>校对=千叶知风<br>定稿=</p>
+		<p>原文链接=<a href="https://www.natashatherobot.com/nsstringfromclass-in-swift/" target="_blank" rel="external">https://www.natashatherobot.com/nsstringfromclass-in-swift/</a><br>作者=Natasha The Robot<br>原文日期=2016-01-14<br>译者=saitjr<br>校对=千叶知风<br>定稿=</p>
 <!--此处开始正文-->
-<h1 id="你应该把_Objective-C_的代码转为_Swift_吗？">你应该把 <code>Objective-C</code> 的代码转为 <code>Swift</code> 吗？</h1><p>未来是 <code>swift</code> 的，但是这就意味着你需要把 <code>Objective-C</code> 的代码都转为 <code>Swift</code> 吗？<br><a id="more"></a></p>
-<h2 id="选择一：不转代码坚持使用_Objective-C">选择一：不转代码坚持使用 <code>Objective-C</code></h2><p>乍一看这似乎是最简单的方法了。既然你已经有了一个 <code>Objective-C</code> 编写的项目，继续用OC写下去肯定不是问题。不过。这会产生一些问题：</p>
-<p>未来可能不会有很多优秀的 <code>Objective-C</code> 开发者，因为会有许多 <code>iOS</code> 开发者将注意力放在了 <code>Swift</code> 上面。如果你的项目依赖于其他的开发者，未来你想要继续维持纯粹的 <code>Objective-C</code> 的项目恐怕不是一件容易的事儿。</p>
-<p>但是即使你自己可以维护一个项目，这种方法也有害处。如果你没有 <code>Swift</code> 方面的实践，你可能会错失许多苹果通过 <code>iOS SDK</code> 引入的最新的开发技术。如果你想跟得上时代的步伐，你不得不学习 <code>Swift</code> 。</p>
-<h2 id="选择二：将_Objective-C_的代码转为_Swift">选择二：将 <code>Objective-C</code> 的代码转为 <code>Swift</code></h2><p>这是最激进的一种方法。但是想要将一个完整的项目从 <code>Objective-C</code> 转为 <code>Swift</code> 意味着要写一个新的项目了。虽然 <code>Objective-C</code> 与 <code>Swift</code> 有很好的互操作性，但是他们的编程规范是完全不同的。所以如果你想要将 <code>Objective-C</code> 转为 <code>Swift</code> ，使用错误的编程范式是很危险的。</p>
-<p>你还需要投入大量的时间和金钱。所以如果你不打算重写你的项目，这个方法就有点太夸张了。</p>
-<h2 id="选择三：将新的代码用_Swift_来写">选择三：将新的代码用 <code>Swift</code> 来写</h2><p>这是一种不错的折中办法。由于 <code>Objective-C</code> 与 <code>Swift</code> 之间的互用性很好，你可以用 <code>Swift</code> 来创建你新的类并让它们与你已有的 <code>Objective-C</code> 的代码交互。</p>
-<p>使用这种方法你可以将你的项目一步步转为 <code>Swift</code> 而不需要投入过多的时间和金钱。更多的是这对于学习的过程也是很好的。与其重写一个完整的项目，不如将注意力集中在应用的某些部分。</p>
-<p>并且这个方法的风险也小得多。如果采取这种方法你可能会发现自己一点儿都不喜欢 <code>Swift</code> （尽管不太可能会发生这种情况），你完全可以再回到 <code>Objective-C</code> 并且不会损失过多的时间和金钱。</p>
-<h2 id="结论">结论</h2><p>虽然有些情况下值得你将 <code>Objective-C</code> 的代码转为 <code>Swift</code> ，但最好的折中的办法就是将新代码用 <code>Swift</code> 来写并与你旧的 <code>Objective-C</code> 的代码进行交互。</p>
-<p>参考：<a href="http://www.thomashanning.com/should-you-use-objective-c-or-swift/" target="_blank" rel="external">Should You Use Objective-C or Swift?</a></p>
+<p>使用 Swift 过程中，我意识到的第一个问题就是没有 <code>NSStringFromClass</code> 的替代方案。在自定义 <code>TableViewCell</code> 时，我喜欢用类名作为 cell 的 identifier，然后在重用队列中，通过 <code>NSStringFromClass</code> 来获得 identifier，从而避免拼写错误。</p>
+<p>然而，在 Swift 中，我不得不写一个丑陋的 extension 来达到这一目的。（<a href="http://stackoverflow.com/questions/24107658/get-a-user-readable-version-of-the-class-name-in-swift-in-objc-nsstringfromclas" target="_blank" rel="external">参考 StackOverflow 的回答</a>）<br><a id="more"></a></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public <span class="class"><span class="keyword">extension</span> <span class="title">NSObject</span></span>&#123;</span><br><span class="line">    public <span class="class"><span class="keyword">class</span> <span class="title">var</span> <span class="title">nameOfClass</span>: <span class="title">String</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="type">NSStringFromClass</span>(<span class="keyword">self</span>).componentsSeparatedByString(<span class="string">"."</span>).last!</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public <span class="keyword">var</span> nameOfClass: <span class="type">String</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="type">NSStringFromClass</span>(<span class="keyword">self</span>.<span class="keyword">dynamicType</span>).componentsSeparatedByString(<span class="string">"."</span>).last!</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不知道以下写法是什么时候出现的，但我确实在 <a href="http://alisoftware.github.io/swift/generics/2016/01/06/generic-tableviewcells/" target="_blank" rel="external">@aligatr</a> 发表的文章中看到了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This now works!!!</span></span><br><span class="line"><span class="type">String</span>(<span class="type">MyTableViewCell</span>)</span><br></pre></td></tr></table></figure>
+<p>为确保这个方案可行，我在自己的工程中试了试，没想到真的成功了！！</p>
+<p><img src="https://www.natashatherobot.com/wp-content/uploads/Screen-Shot-2016-01-15-at-9.12.02-AM.png" alt=""></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// BlueTableViewController</span></span><br><span class="line">    <span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">tableView</span><span class="params">(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath)</span></span> -&gt; <span class="type">UITableViewCell</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 从重用队列中取出 cell!!!</span></span><br><span class="line">        <span class="keyword">let</span> cell = tableView.dequeueReusableCellWithIdentifier(<span class="type">String</span>(<span class="type">BlueTableViewCell</span>), forIndexPath: indexPath)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> cell</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>超级赞赞赞，我终于可以删掉丑陋的 extension 了。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Thomas/">Thomas</a>
+  <span></span> <a href="/tags/Natasha-The-Robot/">Natasha The Robot</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Swift-入门/">Swift 入门</a>
+  <a class="article-category-link" href="/categories/Swift-进阶/">Swift 进阶</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2015/12/09/should-you-migrate-objective-c-code-to-swift/" data-title="你应该把 Objective-C 的代码转为 Swift 吗？ | Hexo" data-tsina="null" class="share clearfix">
+  <div data-url="http://yoursite.com/2016/01/27/nsstringfromclass-in-swift/" data-title="优雅的 NSStringFromClass 替代方案 | Hexo" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -128,19 +127,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/12/09/xcode-xcconfig-files-for-managing-targets-configurations/" title="Xcode:用于管理多个 target 配置的 XCConfig 文件">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  Xcode:用于管理多个 target 配置的 XCConfig 文件</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/12/08/building-a-todo-app-using-realm-and-swift/"  title="使用 Realm 和 Swift 创建 ToDo 应用">
+<a href="/2016/01/27/swift-magic-public-getter-private-setter/"  title="Swift 魔法：公开 Getter，隐藏 Setter">
  <strong>NEXT:</strong><br/> 
- <span>使用 Realm 和 Swift 创建 ToDo 应用
+ <span>Swift 魔法：公开 Getter，隐藏 Setter
 </span>
 </a>
 </div>
@@ -153,7 +144,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#你应该把_Objective-C_的代码转为_Swift_吗？"><span class="toc-number">1.</span> <span class="toc-text">你应该把 Objective-C 的代码转为 Swift 吗？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#选择一：不转代码坚持使用_Objective-C"><span class="toc-number">1.1.</span> <span class="toc-text">选择一：不转代码坚持使用 Objective-C</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择二：将_Objective-C_的代码转为_Swift"><span class="toc-number">1.2.</span> <span class="toc-text">选择二：将 Objective-C 的代码转为 Swift</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择三：将新的代码用_Swift_来写"><span class="toc-number">1.3.</span> <span class="toc-text">选择三：将新的代码用 Swift 来写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结论"><span class="toc-number">1.4.</span> <span class="toc-text">结论</span></a></li></ol></li></ol>
+  
   </div>
 
 <div id="asidepart">

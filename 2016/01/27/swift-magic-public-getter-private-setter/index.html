@@ -4,14 +4,14 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>你应该把 Objective-C 的代码转为 Swift 吗？ | Hexo</title>
+    <title>Swift 魔法：公开 Getter，隐藏 Setter | Hexo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="[object Object]">
     
-    <meta name="description" content="原文链接=http://www.thomashanning.com/should-you-migrate-objective-c-code-to-swift/作者=Thomas原文日期=2015/11/23译者=王亚珂校对=千叶知风定稿=
+    <meta name="description" content="原文链接=https://www.natashatherobot.com/swift-magic-public-getter-private-setter/作者=Gabriel Theodoropoulos原文日期=2016/1/11译者=saitjr校对=小锅定稿=千叶知风
 &lt;!--此处开始正文--&gt;
-你应该把 Objective-C 的代码转为 Swift 吗？未来是 swift 的，但是这就意味着你需要把 Objective-C 的代码都转为 Swift 吗？">
+在我之前发布的文章 构造器注入(Constructor Injection) 中，有这样的案例：在 struct 中有一个属性，这属性需要在外部读，并只能在内部进行写。当时的实现方式是：">
     
     
     
@@ -67,15 +67,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/12/09/should-you-migrate-objective-c-code-to-swift/" title="你应该把 Objective-C 的代码转为 Swift 吗？" itemprop="url">你应该把 Objective-C 的代码转为 Swift 吗？</a>
+      <a href="/2016/01/27/swift-magic-public-getter-private-setter/" title="Swift 魔法：公开 Getter，隐藏 Setter" itemprop="url">Swift 魔法：公开 Getter，隐藏 Setter</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="[object Object]">[object Object]</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-12-09T02:12:02.146Z" itemprop="datePublished">2015-12-09</time>
-    Updated:<time datetime="2015-11-28T06:21:59.508Z" itemprop="dateModified">2015-11-28</time>
+    <time datetime="2016-01-27T01:14:51.373Z" itemprop="datePublished">2016-01-27</time>
+    Updated:<time datetime="2016-01-27T01:13:14.471Z" itemprop="dateModified">2016-01-27</time>
     
   </p>
 </header>
@@ -84,42 +84,42 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#你应该把_Objective-C_的代码转为_Swift_吗？"><span class="toc-number">1.</span> <span class="toc-text">你应该把 Objective-C 的代码转为 Swift 吗？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#选择一：不转代码坚持使用_Objective-C"><span class="toc-number">1.1.</span> <span class="toc-text">选择一：不转代码坚持使用 Objective-C</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择二：将_Objective-C_的代码转为_Swift"><span class="toc-number">1.2.</span> <span class="toc-text">选择二：将 Objective-C 的代码转为 Swift</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择三：将新的代码用_Swift_来写"><span class="toc-number">1.3.</span> <span class="toc-text">选择三：将新的代码用 Swift 来写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结论"><span class="toc-number">1.4.</span> <span class="toc-text">结论</span></a></li></ol></li></ol>
+		
 		</div>
 		
-		<p>原文链接=<a href="http://www.thomashanning.com/should-you-migrate-objective-c-code-to-swift/" target="_blank" rel="external">http://www.thomashanning.com/should-you-migrate-objective-c-code-to-swift/</a><br>作者=Thomas<br>原文日期=2015/11/23<br>译者=王亚珂<br>校对=千叶知风<br>定稿=</p>
+		<p>原文链接=<a href="https://www.natashatherobot.com/swift-magic-public-getter-private-setter/" target="_blank" rel="external">https://www.natashatherobot.com/swift-magic-public-getter-private-setter/</a><br>作者=Gabriel Theodoropoulos<br>原文日期=2016/1/11<br>译者=saitjr<br>校对=小锅<br>定稿=千叶知风</p>
 <!--此处开始正文-->
-<h1 id="你应该把_Objective-C_的代码转为_Swift_吗？">你应该把 <code>Objective-C</code> 的代码转为 <code>Swift</code> 吗？</h1><p>未来是 <code>swift</code> 的，但是这就意味着你需要把 <code>Objective-C</code> 的代码都转为 <code>Swift</code> 吗？<br><a id="more"></a></p>
-<h2 id="选择一：不转代码坚持使用_Objective-C">选择一：不转代码坚持使用 <code>Objective-C</code></h2><p>乍一看这似乎是最简单的方法了。既然你已经有了一个 <code>Objective-C</code> 编写的项目，继续用OC写下去肯定不是问题。不过。这会产生一些问题：</p>
-<p>未来可能不会有很多优秀的 <code>Objective-C</code> 开发者，因为会有许多 <code>iOS</code> 开发者将注意力放在了 <code>Swift</code> 上面。如果你的项目依赖于其他的开发者，未来你想要继续维持纯粹的 <code>Objective-C</code> 的项目恐怕不是一件容易的事儿。</p>
-<p>但是即使你自己可以维护一个项目，这种方法也有害处。如果你没有 <code>Swift</code> 方面的实践，你可能会错失许多苹果通过 <code>iOS SDK</code> 引入的最新的开发技术。如果你想跟得上时代的步伐，你不得不学习 <code>Swift</code> 。</p>
-<h2 id="选择二：将_Objective-C_的代码转为_Swift">选择二：将 <code>Objective-C</code> 的代码转为 <code>Swift</code></h2><p>这是最激进的一种方法。但是想要将一个完整的项目从 <code>Objective-C</code> 转为 <code>Swift</code> 意味着要写一个新的项目了。虽然 <code>Objective-C</code> 与 <code>Swift</code> 有很好的互操作性，但是他们的编程规范是完全不同的。所以如果你想要将 <code>Objective-C</code> 转为 <code>Swift</code> ，使用错误的编程范式是很危险的。</p>
-<p>你还需要投入大量的时间和金钱。所以如果你不打算重写你的项目，这个方法就有点太夸张了。</p>
-<h2 id="选择三：将新的代码用_Swift_来写">选择三：将新的代码用 <code>Swift</code> 来写</h2><p>这是一种不错的折中办法。由于 <code>Objective-C</code> 与 <code>Swift</code> 之间的互用性很好，你可以用 <code>Swift</code> 来创建你新的类并让它们与你已有的 <code>Objective-C</code> 的代码交互。</p>
-<p>使用这种方法你可以将你的项目一步步转为 <code>Swift</code> 而不需要投入过多的时间和金钱。更多的是这对于学习的过程也是很好的。与其重写一个完整的项目，不如将注意力集中在应用的某些部分。</p>
-<p>并且这个方法的风险也小得多。如果采取这种方法你可能会发现自己一点儿都不喜欢 <code>Swift</code> （尽管不太可能会发生这种情况），你完全可以再回到 <code>Objective-C</code> 并且不会损失过多的时间和金钱。</p>
-<h2 id="结论">结论</h2><p>虽然有些情况下值得你将 <code>Objective-C</code> 的代码转为 <code>Swift</code> ，但最好的折中的办法就是将新代码用 <code>Swift</code> 来写并与你旧的 <code>Objective-C</code> 的代码进行交互。</p>
-<p>参考：<a href="http://www.thomashanning.com/should-you-use-objective-c-or-swift/" target="_blank" rel="external">Should You Use Objective-C or Swift?</a></p>
+<p>在我之前发布的文章 <a href="https://www.natashatherobot.com/swift-dependency-injection-with-a-custom-initializer/" target="_blank" rel="external">构造器注入(Constructor Injection)</a> 中，有这样的案例：在 <code>struct</code> 中有一个属性，这属性需要在外部读，并只能在内部进行写。当时的实现方式是：<br><a id="more"></a></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Counter</span> </span>&#123;</span><br><span class="line">    <span class="comment">// `count` 在这里必须是一个 var </span></span><br><span class="line">    <span class="comment">// 但我并不想将 `count` 设为公开的，</span></span><br><span class="line">    <span class="comment">// 所以加了 private 定为私有的</span></span><br><span class="line">    private <span class="keyword">var</span> <span class="built_in">count</span>: <span class="type">Int</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 现在就只能通过这种方式在外部访问 `count` 了</span></span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">getCount</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">count</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方式并不优雅，但却是我唯一能想到的解决方案。幸运的是，现在我找到了一个更好的方式！</p>
+<p>Twitter 上 <a href="https://twitter.com/mipstian/status/685489964403003393" target="_blank" rel="external">@mipstian</a> 指出可以通过设置私有的 Setter 方法来达到效果，就像这样：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Counter</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 现在就只有setter是private的了！</span></span><br><span class="line">    private(<span class="keyword">set</span>) <span class="keyword">var</span> <span class="built_in">count</span>: <span class="type">Int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对当前案例来说，将 <code>Counter</code> 设置为模块内公开(也就是internal)。但如果你是要做 SDK，你可以像下面这样公开 Getter ，同时隐藏 Setter：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public <span class="class"><span class="keyword">struct</span> <span class="title">Counter</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 现在就只有setter是private的了！</span></span><br><span class="line">    public private(<span class="keyword">set</span>) <span class="keyword">var</span> <span class="built_in">count</span>: <span class="type">Int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我也不知道我怎么就错过了这个知识（可能是因为我一直都尽量使用 <code>let</code> 的原因），但我真的很庆幸最终我还是知道了这个超赞的 Swift 特性。</p>
+<p>–</p>
+<p>以上全文完，但是作为一个走心的翻译组，我们发现我们还翻译过其它类似的文章，以下链接可以供参考：</p>
+<p><a href="http://swift.gg/2016/01/11/public-properties-with-private-setters/" target="_blank" rel="external">Swift：带有私有设置方法的公有属性</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Thomas/">Thomas</a>
+  <span></span> <a href="/tags/Natasha-The-Robot/">Natasha The Robot</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/Swift-入门/">Swift 入门</a>
+  <a class="article-category-link" href="/categories/Swift-进阶/">Swift 进阶</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2015/12/09/should-you-migrate-objective-c-code-to-swift/" data-title="你应该把 Objective-C 的代码转为 Swift 吗？ | Hexo" data-tsina="null" class="share clearfix">
+  <div data-url="http://yoursite.com/2016/01/27/swift-magic-public-getter-private-setter/" data-title="Swift 魔法：公开 Getter，隐藏 Setter | Hexo" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -129,18 +129,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/12/09/xcode-xcconfig-files-for-managing-targets-configurations/" title="Xcode:用于管理多个 target 配置的 XCConfig 文件">
+ <a href="/2016/01/27/nsstringfromclass-in-swift/" title="优雅的 NSStringFromClass 替代方案">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  Xcode:用于管理多个 target 配置的 XCConfig 文件</span>
+  优雅的 NSStringFromClass 替代方案</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/12/08/building-a-todo-app-using-realm-and-swift/"  title="使用 Realm 和 Swift 创建 ToDo 应用">
+<a href="/2016/01/26/linkedin-sign-in/"  title="如何使用 OAuth 2.0 将 LinkedIn 集成入 iOS 应用">
  <strong>NEXT:</strong><br/> 
- <span>使用 Realm 和 Swift 创建 ToDo 应用
+ <span>如何使用 OAuth 2.0 将 LinkedIn 集成入 iOS 应用
 </span>
 </a>
 </div>
@@ -153,7 +153,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#你应该把_Objective-C_的代码转为_Swift_吗？"><span class="toc-number">1.</span> <span class="toc-text">你应该把 Objective-C 的代码转为 Swift 吗？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#选择一：不转代码坚持使用_Objective-C"><span class="toc-number">1.1.</span> <span class="toc-text">选择一：不转代码坚持使用 Objective-C</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择二：将_Objective-C_的代码转为_Swift"><span class="toc-number">1.2.</span> <span class="toc-text">选择二：将 Objective-C 的代码转为 Swift</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选择三：将新的代码用_Swift_来写"><span class="toc-number">1.3.</span> <span class="toc-text">选择三：将新的代码用 Swift 来写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结论"><span class="toc-number">1.4.</span> <span class="toc-text">结论</span></a></li></ol></li></ol>
+  
   </div>
 
 <div id="asidepart">
