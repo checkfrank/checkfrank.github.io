@@ -4,14 +4,14 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>UIAlertController 测试的修正 | Hexo</title>
+    <title>排列 和 共享 playground 页面 | Hexo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="[object Object]">
     
-    <meta name="description" content="原文链接=http://swiftandpainless.com/correction-on-testing-uialertcontroller/作者=dom原文日期=2015-11-25译者=小袋子校对=lfb_CD定稿=千叶知风
+    <meta name="description" content="原文链接=http://ericasadun.com/2016/01/04/sorting-and-sharing-playground-pages/作者=Erica Sadun原文日期=2016/01/04译者=littledogboy校对=千叶知风定稿=发布时间=
 &lt;!--此处开始正文--&gt;
-两个月前，我曾发布了一篇如何测试 UIAlertController的文章。一个读者发现测试没有如期地起作用：">
+排序 Playground 页面如果在同一个文件中有多个 playground 页面（我这样做），那么你会发现页面按照字母排序，查找起来会很方便。使用 Edit &amp;gt; Sort &amp;gt; ByName 来整理你的文件结构。">
     
     
     
@@ -67,15 +67,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/12/10/correction-on-testing-uialertcontroller/" title="UIAlertController 测试的修正" itemprop="url">UIAlertController 测试的修正</a>
+      <a href="/2016/02/04/sorting-and-sharing-playground-pages/" title="排列 和 共享 playground 页面" itemprop="url">排列 和 共享 playground 页面</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="[object Object]">[object Object]</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-12-10T05:06:49.746Z" itemprop="datePublished">2015-12-10</time>
-    更新日期:<time datetime="2015-12-10T05:06:17.915Z" itemprop="dateModified">2015-12-10</time>
+    <time datetime="2016-02-04T01:31:35.844Z" itemprop="datePublished">2016-02-04</time>
+    更新日期:<time datetime="2016-02-04T01:30:46.102Z" itemprop="dateModified">2016-02-04</time>
     
   </p>
 </header>
@@ -84,37 +84,35 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目錄</strong>
-		
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#排序_Playground_页面"><span class="toc-number">1.</span> <span class="toc-text">排序 Playground 页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#拷贝_Playground_页面"><span class="toc-number">2.</span> <span class="toc-text">拷贝 Playground 页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查找_Playground"><span class="toc-number">3.</span> <span class="toc-text">查找 Playground</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#命令行搜索_Playgrounds"><span class="toc-number">4.</span> <span class="toc-text">命令行搜索 Playgrounds</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#书籍"><span class="toc-number">5.</span> <span class="toc-text">书籍</span></a></li></ol>
 		</div>
 		
-		<p>原文链接=<a href="http://swiftandpainless.com/correction-on-testing-uialertcontroller/" target="_blank" rel="external">http://swiftandpainless.com/correction-on-testing-uialertcontroller/</a><br>作者=dom<br>原文日期=2015-11-25<br>译者=小袋子<br>校对=lfb_CD<br>定稿=千叶知风</p>
+		<p>原文链接=<a href="http://ericasadun.com/2016/01/04/sorting-and-sharing-playground-pages/" target="_blank" rel="external">http://ericasadun.com/2016/01/04/sorting-and-sharing-playground-pages/</a><br>作者=Erica Sadun<br>原文日期=2016/01/04<br>译者=littledogboy<br>校对=千叶知风<br>定稿=<br>发布时间=</p>
 <!--此处开始正文-->
-<p>两个月前，我曾发布了一篇<a href="http://swiftandpainless.com/how-to-test-uialertcontroller-in-swift/" target="_blank" rel="external">如何测试 UIAlertController</a>的文章。一个读者发现测试没有如期地起作用：<br><a id="more"></a></p>
-<blockquote>
-<p><a href="https://twitter.com/dasdom" target="_blank" rel="external">@dasdom</a> 你的测试是正常的，但是在 <code>MockUIAction</code> 中的简便 <code>init</code> 方法没有被调用。你不能重写 <code>init</code> 方法，看起来像是 iOS 的bug。<br> — Larhythimx (@Larhythmix) <a href="https://twitter.com/Larhythmix/status/669456137041915905" target="_blank" rel="external">25. November 2015</a></p>
-</blockquote>
-<p>Larhythimx 说的完全正确。模拟程序的初始化方法从来没有调用。为什么我在写这个测试用例的时候没有发觉呢？那是因为 handler 确实被调用了，看起来就像 <code>UIAlertAction</code> 真的把 handler 作为内部变量去存储动作的 handler 闭包。这是非常脆弱的，并且 Larhythimx 在另一个 tweet 指出在他的测试程序中 handler 是 <code>nil</code>。</p>
-<p>所以作为黄金通道（即编写不需要改变实现的测试）走不通，那就退而求其次用别的方法。</p>
-<p>首先，我们在 <code>UIAlertAction</code> 中添加一个类方法去创建 action 。在 <code>ViewController.swift</code> 中增加如下扩展：</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">UIAlertAction</span> </span>&#123;</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">func</span> <span class="title">makeActionWithTitle</span>(<span class="title">title</span>: <span class="title">String</span>?, <span class="title">style</span>: <span class="title">UIAlertActionStyle</span>, <span class="title">handler</span>: ((<span class="title">UIAlertAction</span>) -&gt; <span class="title">Void</span>)?) -&gt; <span class="title">UIAlertAction</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="type">UIAlertAction</span>(title: title, style: style, handler: handler)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在 <code>MockAlertAction</code> 中增加这个重写方法：</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">override</span> <span class="class"><span class="keyword">class</span> <span class="title">func</span> <span class="title">makeActionWithTitle</span>(<span class="title">title</span>: <span class="title">String</span>?, <span class="title">style</span>: <span class="title">UIAlertActionStyle</span>, <span class="title">handler</span>: ((<span class="title">UIAlertAction</span>) -&gt; <span class="title">Void</span>)?) -&gt; <span class="title">MockAlertAction</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="type">MockAlertAction</span>(title: title, style: style, handler: handler)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在实现代码中，我们现在可以使用类方法去创建 alert 动作：</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> okAction = <span class="type">Action</span>.makeActionWithTitle(<span class="string">"OK"</span>, style: .<span class="type">Default</span>) &#123; (action) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">self</span>.actionString = <span class="string">"OK"</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> cancelAction = <span class="type">Action</span>.makeActionWithTitle(<span class="string">"Cancel"</span>, style: .<span class="type">Default</span>) &#123; (action) -&gt; <span class="type">Void</span> <span class="keyword">in</span></span><br><span class="line">    <span class="keyword">self</span>.actionString = <span class="string">"Cancel"</span></span><br><span class="line">&#125;</span><br><span class="line">alertViewController.addAction(cancelAction)</span><br></pre></td></tr></table></figure>
-<p>为了确保我们的测试用例正常，如我们预期地工作，将 <code>MockAlertAction</code> 的 <code>handler</code> 属性重命名为 <code>mockHandler</code>： </p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mockHandler: <span class="type">Handler</span>?</span><br></pre></td></tr></table></figure>
-<p>此外，我们为动作的模拟标题添加测试。取消动作的测试应该像这样： </p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="func"><span class="keyword">func</span> <span class="title">testAlert_FirstActionStoresCancel</span><span class="params">()</span></span> &#123;</span><br><span class="line">  sut.<span class="type">Action</span> = <span class="type">MockAlertAction</span>.<span class="keyword">self</span></span><br><span class="line">  </span><br><span class="line">  sut.showAlert(<span class="type">UIButton</span>())</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">let</span> alertController = sut.presentedViewController <span class="keyword">as</span>! <span class="type">UIAlertController</span></span><br><span class="line">  <span class="keyword">let</span> action = alertController.actions.first <span class="keyword">as</span>! <span class="type">MockAlertAction</span></span><br><span class="line">  action.mockHandler!(action)</span><br><span class="line">  </span><br><span class="line">  <span class="type">XCTAssertEqual</span>(sut.actionString, <span class="string">"Cancel"</span>)</span><br><span class="line">  <span class="type">XCTAssertEqual</span>(action.mockTitle, <span class="string">"Cancel"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个测试在此前的版本将会失败，因为初始化方法没有被调用，因此模拟标题也没有得到设置。</p>
-<p>你可以在 <a href="https://github.com/dasdom/TestingAlertExperiment" target="_blank" rel="external">github</a> 上找到修正的版本。</p>
-<p>再次感谢 Larhythimx 的推特！</p>
+<h2 id="排序_Playground_页面">排序 Playground 页面</h2><p>如果在同一个文件中有多个 playground 页面（我这样做），那么你会发现页面按照字母排序，查找起来会很方便。使用 Edit &gt; Sort &gt; ByName 来整理你的文件结构。<br><a id="more"></a></p>
+<p><img src="http://ericasadun.com/wp-content/uploads/2016/01/Screen-Shot-2016-01-04-at-10.07.27-AM.png" alt=""></p>
+<p>为了找起来更快，但愿你已经按照逻辑命名了每一个页面。</p>
+<p><img src="http://ericasadun.com/wp-content/uploads/2016/01/Screen-Shot-2016-01-04-at-10.08.16-AM.png" alt=""></p>
+<p>不幸的是，随着添加文件到 palygrounds 中，Xcode 性能受到了很大的影响（译者加：添加的新文件不会自动排列喵=w=）。虽然你可以通过拖动使文件重新有序，但是一旦打开很多 palygrounds 页面，拖动文件变的不现实。</p>
+<h2 id="拷贝_Playground_页面">拷贝 Playground 页面</h2><p>拖拽一个页面复制到一个新的工作区中，简单又高效。这张截图显示拖拽 “adding arrays” 页面到一个新的 playground 文件中。</p>
+<p><img src="http://ericasadun.com/wp-content/uploads/2016/01/Screen-Shot-2016-01-04-at-10.18.15-AM.png" alt=""></p>
+<p>只要你喜欢，你也可以打开一个 playground 包（按着 Control 键点击/右击 &gt; 显示包内容）和 访问单个源文件。</p>
+<p><img src="http://ericasadun.com/wp-content/uploads/2016/01/Screen-Shot-2016-01-04-at-10.22.04-AM.png" alt=""></p>
+<p>不要在包之间拖放这些文件，除非你愿意编辑这个 contents.xcplayground XML 文件。编辑XML文件并不困难，但它通常不值得你浪费时间。</p>
+<p>取而代之，你可以考虑手动添加到另一个 playground 中，在文本编辑器中打开该文件，并且使用 复制/粘贴 到一个新的页面。</p>
+<h2 id="查找_Playground">查找 Playground</h2><p>Xcode 提供了两个搜索域来帮助你找到资料。底部的搜索条匹配的是文件名。</p>
+<p><img src="http://ericasadun.com/wp-content/uploads/2016/01/Screen-Shot-2016-01-04-at-10.15.09-AM.png" alt=""></p>
+<p>导航顶部的搜索来寻找匹配的文本。</p>
+<p><img src="http://ericasadun.com/wp-content/uploads/2016/01/Screen-Shot-2016-01-04-at-10.13.47-AM.png" alt=""></p>
+<h2 id="命令行搜索_Playgrounds">命令行搜索 Playgrounds</h2><p>前一段时间，我写了pgrep命令 来获取未能被 spotlight 索引到的 playground 文件。根据 playground 测试中文件给定的多少，pggrep 命令已经成为一个有效的寻找工具，用来寻找现在或者以前获取过标题的 playground 文件。</p>
+<h2 id="书籍">书籍</h2><p>同样还有一本全部关于 playground 的<a href="https://itunes.apple.com/us/book/playground-secrets-power-tips/id982838034?mt=11" target="_blank" rel="external">书</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Swift-and-Painless/">Swift and Painless</a>
+  <span></span> <a href="/tags/Erica-Sadun/">Erica Sadun</a>
   </div>
 
 
@@ -127,7 +125,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2015/12/10/correction-on-testing-uialertcontroller/" data-title="UIAlertController 测试的修正 | Hexo" data-tsina="null" class="share clearfix">
+  <div data-url="http://yoursite.com/2016/02/04/sorting-and-sharing-playground-pages/" data-title="排列 和 共享 playground 页面 | Hexo" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -136,19 +134,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/12/15/mixins-over-inheritance/" title="Mixins 比继承更好">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  Mixins 比继承更好</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/12/09/reduce-all-the-things/"  title="化零为整：Reduce 详解">
+<a href="/2016/01/30/protocol-oriented-segue-identifiers-swift/"  title="使用 Swift 的面向协议编程定义 Segue 标识">
  <strong>NEXT:</strong><br/> 
- <span>化零为整：Reduce 详解
+ <span>使用 Swift 的面向协议编程定义 Segue 标识
 </span>
 </a>
 </div>
@@ -161,7 +151,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目錄</strong>
-  
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#排序_Playground_页面"><span class="toc-number">1.</span> <span class="toc-text">排序 Playground 页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#拷贝_Playground_页面"><span class="toc-number">2.</span> <span class="toc-text">拷贝 Playground 页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#查找_Playground"><span class="toc-number">3.</span> <span class="toc-text">查找 Playground</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#命令行搜索_Playgrounds"><span class="toc-number">4.</span> <span class="toc-text">命令行搜索 Playgrounds</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#书籍"><span class="toc-number">5.</span> <span class="toc-text">书籍</span></a></li></ol>
   </div>
 
 <div id="asidepart">

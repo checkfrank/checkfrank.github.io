@@ -1,0 +1,405 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>使用 Swift 的面向协议编程定义 Segue 标识 | Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="[object Object]">
+    
+    <meta name="description" content="原文链接=https://www.natashatherobot.com/protocol-oriented-segue-identifiers-swift/作者=Natasha原文日期=2015/12/17译者=小锅校对=&amp;amp;nbsp定稿=千叶知风发布时间=
+&lt;!--此处开始正文--&gt;
+回溯到八月份，我观看了 Swift in Practice WWDC15 这个超赞的视频。视频的第一部分让我印象十分深刻，因此我针对这部分写了一篇博客—— A Beautiful Solution to Non-Optional UIImage Named in Swift ——然后我最终开始准备写关于这个视频的第二部分，甚至其它更多令人激动的部分（毕竟，假期是最好的写博客的时机）（译者注：大神就是这样啊，假期不是用来玩的，反而是写博客的大好时机）。">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="Hexo" title="Hexo"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Hexo">Hexo</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/01/30/protocol-oriented-segue-identifiers-swift/" title="使用 Swift 的面向协议编程定义 Segue 标识" itemprop="url">使用 Swift 的面向协议编程定义 Segue 标识</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="[object Object]">[object Object]</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2016-01-30T02:00:56.223Z" itemprop="datePublished">2016-01-30</time>
+    更新日期:<time datetime="2016-01-30T02:00:36.640Z" itemprop="dateModified">2016-01-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题的出现"><span class="toc-number">1.</span> <span class="toc-text">问题的出现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方案"><span class="toc-number">2.</span> <span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+		</div>
+		
+		<p>原文链接=<a href="https://www.natashatherobot.com/protocol-oriented-segue-identifiers-swift/" target="_blank" rel="external">https://www.natashatherobot.com/protocol-oriented-segue-identifiers-swift/</a><br>作者=Natasha<br>原文日期=2015/12/17<br>译者=小锅<br>校对=&amp;nbsp<br>定稿=千叶知风<br>发布时间=</p>
+<!--此处开始正文-->
+<p>回溯到八月份，我观看了 <a href="https://developer.apple.com/videos/play/wwdc2015-411/" target="_blank" rel="external">Swift in Practice WWDC15</a> 这个超赞的视频。视频的第一部分让我印象十分深刻，因此我针对这部分写了一篇博客—— <a href="http://natashatherobot.com/non-optional-uiimage-named-swift/" target="_blank" rel="external">A Beautiful Solution to Non-Optional UIImage Named in Swift</a> ——然后我最终开始准备写关于这个视频的第二部分，甚至其它更多令人激动的部分（毕竟，假期是最好的写博客的时机）（译者注：大神就是这样啊，假期不是用来玩的，反而是写博客的大好时机）。<br><a id="more"></a></p>
+<p>这次，我准备写的是：<strong>处理多个 segue 标识的优雅解决方案</strong>。你猜对了！就是使用协议。</p>
+<p>今天就让我们开始针对你的选择展开旅程吧。你会选择：红色药丸还是蓝色药丸…（译者注：如果你看不懂这个梗的话，我建议你去补习一下黑客帝国）</p>
+<p><img src="https://www.natashatherobot.com/wp-content/uploads/Simulator-Screen-Shot-Dec-18-2015-3.35.43-PM-768x432.png" alt="Matrix Red Pill Blue Pill App"></p>
+<h2 id="问题的出现">问题的出现</h2><p>很不幸地，Segue 标识一般都是基于字符串的硬编码。当它们与 Storyboard 一起使用时，你必须在代码当中到处复制这些字符串 – 这确实很容易产生错误拼写的情况。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ViewController.swift</span></span><br><span class="line">    </span><br><span class="line">    <span class="preprocessor">@IBAction</span> <span class="func"><span class="keyword">func</span> <span class="title">onRedPillButtonTap</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">    	 <span class="comment">// 我在这里硬编码了红色药丸的segue标识 😬</span></span><br><span class="line">        performSegueWithIdentifier(<span class="string">"TheRedPillExperience"</span>, sender: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="preprocessor">@IBAction</span> <span class="func"><span class="keyword">func</span> <span class="title">onBluePillButtonTap</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">    	 <span class="comment">// 我在这里硬编码了蓝色药丸的segue标识 😬</span></span><br><span class="line">        performSegueWithIdentifier(<span class="string">"TheBluePillExperience"</span>, sender: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>当然，将来如果你决定要改变一个 segue 的标识，你就必须在硬编码这些字符串的全部地方去修改它们的名称。这当然就有可能导致更多潜在的错误，比如错误的复制/粘贴以及错误的拼写。</p>
+<p>为了减少错误情况的发生，当一个 ViewController 中使用到了多个 segue 的标识时，我都使用枚举来处理。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ViewController.swift</span></span><br><span class="line"> </span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">SegueIdentifier</span>: <span class="title">String</span> </span>&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">TheRedPillExperience</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">TheBluePillExperience</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>但是这又带来了别的问题。最主要的就是代码的丑陋和臃肿：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ViewController.swift</span></span><br><span class="line">    </span><br><span class="line">    <span class="preprocessor">@IBAction</span> <span class="func"><span class="keyword">func</span> <span class="title">onRedPillButtonTap</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">        <span class="comment">// 这行代码有点长了</span></span><br><span class="line">        performSegueWithIdentifier(<span class="type">SegueIdentifier</span>.<span class="type">TheRedPillExperience</span>.rawValue, sender: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="preprocessor">@IBAction</span> <span class="func"><span class="keyword">func</span> <span class="title">onBluePillButtonTap</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">        <span class="comment">// 这个也很长</span></span><br><span class="line">        performSegueWithIdentifier(<span class="type">SegueIdentifier</span>.<span class="type">TheBluePillExperience</span>.rawValue, sender: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>当我们处理 <code>prepareForSegue</code> 时，这个问题就更加明显了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ViewController.swift</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">prepareForSegue</span><span class="params">(segue: UIStoryboardSegue, sender: AnyObject?)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 解包所有东西！！！</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> identifier = segue.identifier &#123;</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">let</span> segueIdentifier = <span class="type">SegueIdentifier</span>(rawValue: identifier) &#123;</span><br><span class="line">                <span class="keyword">switch</span> segueIdentifier &#123;</span><br><span class="line">                <span class="keyword">case</span> .<span class="type">TheRedPillExperience</span>:</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">"😈"</span>)</span><br><span class="line">                <span class="keyword">case</span> .<span class="type">TheBluePillExperience</span>:</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">"👼"</span>)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这是我在 Swift 2.0 之前实际使用过的方式。现在我们至少可以使用 guard 关键字来避免所谓的“金字塔噩梦”，但是这依然还是不够好：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ViewController.swift</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">prepareForSegue</span><span class="params">(segue: UIStoryboardSegue, sender: AnyObject?)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        guard <span class="keyword">let</span> identifier = segue.identifier,</span><br><span class="line">            segueIdentifier = <span class="type">SegueIdentifier</span>(rawValue: identifier) <span class="keyword">else</span> &#123;</span><br><span class="line">            fatalError(<span class="string">"Invalid segue identifier <span class="subst">\(segue.identifier)</span>."</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">switch</span> segueIdentifier &#123;</span><br><span class="line">        <span class="keyword">case</span> .<span class="type">TheRedPillExperience</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"😈"</span>)</span><br><span class="line">        <span class="keyword">case</span> .<span class="type">TheBluePillExperience</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"👼"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>毕竟，在整个app中的每个视图控制器都会碰到这个问题。你会如何来让这些代码更加整洁呢？机智如你，应该已经猜到了，协议可以用来解决这个问题。</p>
+<h2 id="解决方案">解决方案</h2><p>这是一个靠我自己无法想出的优雅解决方案。感谢苹果在今年 WWDC 中关于架构的超赞演讲。我是认真的，真的超赞。</p>
+<p>首先，创建一个 SegueHandlerType 来将 Segueidentifier 枚举标识为一个类型：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  SegueHandlerType.swift</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"><span class="keyword">import</span> Foundation</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">SegueHandlerType</span> </span>&#123;</span><br><span class="line">    <span class="keyword">typealias</span> <span class="type">SegueIdentifier</span>: <span class="type">RawRepresentable</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在可以使用协议扩展的功能来为 UIViewController 创建基于字符串的 Segueidentifer 枚举：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  SegueHandlerType.swift</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">// 注意这里我们使用了 where 来让这个方法只适用于特定的类 😍</span></span><br><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">SegueHandlerType</span> <span class="title">where</span> <span class="title">Self</span>: <span class="title">UIViewController</span>,</span><br><span class="line">    <span class="title">SegueIdentifier</span>.<span class="title">RawValue</span> == <span class="title">String</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">performSegueWithIdentifier</span><span class="params">(segueIdentifier: SegueIdentifier,</span><br><span class="line">        sender: AnyObject?)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        performSegueWithIdentifier(segueIdentifier.rawValue, sender: sender)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="func"><span class="keyword">func</span> <span class="title">segueIdentifierForSegue</span><span class="params">(segue: UIStoryboardSegue)</span></span> -&gt; <span class="type">SegueIdentifier</span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 这里还是需要使用 guard 语句，但是至少我们可以获取到变量的值  </span></span><br><span class="line">        guard <span class="keyword">let</span> identifier = segue.identifier,</span><br><span class="line">            segueIdentifier = <span class="type">SegueIdentifier</span>(rawValue: identifier) <span class="keyword">else</span> &#123; </span><br><span class="line">                fatalError(<span class="string">"Invalid segue identifier <span class="subst">\(segue.identifier)</span>."</span>) &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> segueIdentifier</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以注意到，协议扩展中的方法并没有在协议中声明，它们不是用于被重写的。这是我见过的关于这个用例的最好的使用方法。</p>
+<p>现在这样，使用起来就更加的简单和漂亮了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ViewController.swift</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 只需要让 UIViewController 遵守 SegueHandlerType，简直太 easy 了有没有 🎂</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ViewController</span>: <span class="title">UIViewController</span>, <span class="title">SegueHandlerType</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 现在你如果不实现这个方法，编译器就会报错</span></span><br><span class="line">    <span class="comment">// 遵守 SegueHandlerType 协议需要实现这个方法</span></span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">SegueIdentifier</span>: <span class="title">String</span> </span>&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">TheRedPillExperience</span></span><br><span class="line">        <span class="keyword">case</span> <span class="type">TheBluePillExperience</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">override</span> <span class="func"><span class="keyword">func</span> <span class="title">prepareForSegue</span><span class="params">(segue: UIStoryboardSegue, sender: AnyObject?)</span></span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 🎉 再见！金字塔噩梦！</span></span><br><span class="line">        <span class="keyword">switch</span> segueIdentifierForSegue(segue) &#123;</span><br><span class="line">        <span class="keyword">case</span> .<span class="type">TheRedPillExperience</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"😈"</span>)</span><br><span class="line">        <span class="keyword">case</span> .<span class="type">TheBluePillExperience</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">"👼"</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="preprocessor">@IBAction</span> <span class="func"><span class="keyword">func</span> <span class="title">onRedPillButtonTap</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">        <span class="comment">// ✅ 这才是我想写的代码！太优雅了！</span></span><br><span class="line">        performSegueWithIdentifier(.<span class="type">TheRedPillExperience</span>, sender: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="preprocessor">@IBAction</span> <span class="func"><span class="keyword">func</span> <span class="title">onBluePillButtonTap</span><span class="params">(sender: AnyObject)</span></span> &#123;</span><br><span class="line">        performSegueWithIdentifier(.<span class="type">TheBluePillExperience</span>, sender: <span class="keyword">self</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="总结">总结</h2><p>在视频中提到的关于使用 <strong>SegueHandlerType</strong> 的好处有：</p>
+<ul>
+<li>如果使用了未定义的 segue 标识，就会有编译期错误</li>
+<li>更好地支持重用</li>
+<li>方便的语法</li>
+</ul>
+<p>我们同时还见识到了协议的强大：</p>
+<ul>
+<li>使用协议以及关联类型来让整个app的约束更紧密</li>
+<li>使用特定的协议扩展来共享方法的实现</li>
+</ul>
+<p>这里面最大的好处就是利用了编译器的优势。你如果使用了这种方法来构建你的代码，编译器将会与你同在，当你犯错时，它就会提醒你。</p>
+<p>你可以在<a href="https://github.com/NatashaTheRobot/POSegueIdentifiers" target="_blank" rel="external">Github 上下载到完整的示例程序</a>。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Natasha-The-Robot/">Natasha The Robot</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Swift-进阶/">Swift 进阶</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2016/01/30/protocol-oriented-segue-identifiers-swift/" data-title="使用 Swift 的面向协议编程定义 Segue 标识 | Hexo" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2016/02/04/sorting-and-sharing-playground-pages/" title="排列 和 共享 playground 页面">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  排列 和 共享 playground 页面</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2016/01/30/being-swifty-with-collection-view-and-table-view-cells/"  title="更加 Swift 化的 Collection View 和 Table View Cells">
+ <strong>NEXT:</strong><br/> 
+ <span>更加 Swift 化的 Collection View 和 Table View Cells
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题的出现"><span class="toc-number">1.</span> <span class="toc-text">问题的出现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决方案"><span class="toc-number">2.</span> <span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分類</p>
+		<ul>
+		
+			<li><a href="/categories/3D-Touch/" title="3D Touch">3D Touch<sup>1</sup></a></li>
+		
+			<li><a href="/categories/Swift-入门/" title="Swift 入门">Swift 入门<sup>17</sup></a></li>
+		
+			<li><a href="/categories/Swift-进阶/" title="Swift 进阶">Swift 进阶<sup>16</sup></a></li>
+		
+			<li><a href="/categories/WatchOS-2/" title="WatchOS 2">WatchOS 2<sup>3</sup></a></li>
+		
+			<li><a href="/categories/Xcode/" title="Xcode">Xcode<sup>1</sup></a></li>
+		
+			<li><a href="/categories/iOS-开发/" title="iOS 开发">iOS 开发<sup>2</sup></a></li>
+		
+			<li><a href="/categories/iOS开发/" title="iOS开发">iOS开发<sup>2</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/APPVENTURE/" title="APPVENTURE">APPVENTURE<sup>1</sup></a></li>
+		
+			<li><a href="/tags/AppCoda/" title="AppCoda">AppCoda<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Apple/" title="Apple">Apple<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Benedikt-Terhechte/" title="Benedikt Terhechte">Benedikt Terhechte<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Crunchy-Development/" title="Crunchy Development">Crunchy Development<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Erica-Sadun/" title="Erica Sadun">Erica Sadun<sup>8</sup></a></li>
+		
+			<li><a href="/tags/IOSCREATOR/" title="IOSCREATOR">IOSCREATOR<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Jacob-Bandes-Storch/" title="Jacob Bandes-Storch">Jacob Bandes-Storch<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Jameson-Quave/" title="Jameson Quave">Jameson Quave<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Mike-Ash/" title="Mike Ash">Mike Ash<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Natasha-The-Robot/" title="Natasha The Robot">Natasha The Robot<sup>7</sup></a></li>
+		
+			<li><a href="/tags/Ole-Begemann/" title="Ole Begemann">Ole Begemann<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Raj-Kandathi/" title="Raj Kandathi">Raj Kandathi<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swift-and-Painless/" title="Swift and Painless">Swift and Painless<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Terhechte/" title="Terhechte">Terhechte<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thomas/" title="Thomas">Thomas<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Thomas-Hanning/" title="Thomas Hanning">Thomas Hanning<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Thomas-Weston/" title="Thomas Weston">Thomas Weston<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Tomasz-Szulc/" title="Tomasz Szulc">Tomasz Szulc<sup>3</sup></a></li>
+		
+			<li><a href="/tags/ericasadun/" title="ericasadun">ericasadun<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2016 
+		
+		<a href="http://yoursite.com" target="_blank" title="[object Object]">[object Object]</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>
