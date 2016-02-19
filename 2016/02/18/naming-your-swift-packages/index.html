@@ -4,14 +4,14 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Hello World | Hexo</title>
+    <title>为你的 Swift Packages 命名 | Hexo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="[object Object]">
     
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in ">
+    <meta name="description" itemprop="description" content="在Swift开发中我们应该为Swift Packages命名，提供namespace命名空间就是不错的思路。">
     
-    
+    <meta name="keywords" content="namespace,swift package manager,swift开发">
     
     
     
@@ -65,15 +65,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/14/hello-world/" title="Hello World" itemprop="url">Hello World</a>
+      <a href="/2016/02/18/naming-your-swift-packages/" title="为你的 Swift Packages 命名" itemprop="url">为你的 Swift Packages 命名</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="[object Object]">[object Object]</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-09-14T10:17:55.415Z" itemprop="datePublished">2015-09-14</time>
-    更新日期:<time datetime="2015-09-14T10:17:55.415Z" itemprop="dateModified">2015-09-14</time>
+    <time datetime="2016-02-18T02:04:55.824Z" itemprop="datePublished">2016-02-18</time>
+    更新日期:<time datetime="2016-02-18T02:03:55.375Z" itemprop="dateModified">2016-02-18</time>
     
   </p>
 </header>
@@ -82,28 +82,44 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目錄</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick_Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create_a_new_post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run_server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate_static_files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy_to_remote_sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+		
 		</div>
 		
-		<p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+		<p>原文链接=<a href="http://ericasadun.com/2016/02/08/naming-your-swift-packages/" target="_blank" rel="external">http://ericasadun.com/2016/02/08/naming-your-swift-packages/</a><br>作者=Erica Sadun<br>原文日期=2016-02-08<br>译者=Cee<br>校对=小锅<br>定稿=千叶知风<br>发布时间=</p>
+<!--此处开始正文-->
+<p>于是乎，在整理我大量 Swift 代码中的一小部分时，我决定利用一下 Swift Package Manager 的优势，将其中的一下推到 GitHub 上。这些都是<a href="https://github.com/erica/SwiftUtility" target="_blank" rel="external">我</a>！<a href="https://github.com/erica/SwiftCollections" target="_blank" rel="external">做</a>！<a href="https://github.com/erica/SwiftString" target="_blank" rel="external">的</a>！<br><a id="more"></a></p>
+<p>在此之后，我突然意识到我的命名太糟糕了。我本应该用一种更加符合逻辑、可读性好的方式去命名。</p>
+<p>包（Package）命名需要简洁易懂。是的，同样它们也需要避免重名情况的发生，因为当你有个叫做 SwiftString 的包时，可能 Bob、Jane、Harry 都会有同样名称的这个包。命名冲突是不可避免的。</p>
+<p>再比如你的 <code>SwiftString.doSomethingMeaningfulWithAString()</code> 方法会和其他人的 <code>SwiftString.doSomethingMeaningfulWithAString()</code> 难以分辨。这时，也没有内置的解决办法来告诉我如何处理模块间的命名冲突。</p>
+<p>今后的一种解决思路是提供命名空间（namespace）。例如，包声明的格式可能会加上 Origin 字段：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> PackageDescription</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> package = <span class="type">Package</span>(</span><br><span class="line">    name: <span class="string">"SwiftString"</span></span><br><span class="line">    origin: <span class="string">"com.sadun"</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>有了这个，你可以通过使用命名空间来避免冲突：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.sadun.SwiftString</span><br><span class="line"><span class="keyword">import</span> com.LeeJason.SwiftString</span><br></pre></td></tr></table></figure>
+<p>以及：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">com.sadun.<span class="type">SwiftString</span>.doSomethingMeaningfulWithAString()</span><br></pre></td></tr></table></figure>
+<p>众所周知，这样会在你只需要引入一到两个包的时候变得复杂一些，但是这样却能够很好地避免了引用上的歧义。</p>
+<p>现在，虽然这些都还没有被公开认可，同时也没有官方的 SPM 包，但是你要知道我们的这些自我组织的包即将要登上历史舞台了。确保以一种清晰明了的方法来使用多个、可能在命名上有冲突的包将会是一件好事情。</p>
+<p>从现在开始，使用 <code>SadunSwiftString</code> 而不是 <code>SwiftString</code> 来避免这些问题吧。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Erica-Sadun/">Erica Sadun</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/Swift-进阶/">Swift 进阶</a>
+</div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2015/09/14/hello-world/" data-title="Hello World | Hexo" data-tsina="null" class="share clearfix">
+  <div data-url="http://yoursite.com/2016/02/18/naming-your-swift-packages/" data-title="为你的 Swift Packages 命名 | Hexo" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -113,18 +129,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2015/09/23/ask-erica-how-do-i-loop-from-non-zero-n-swiftlang/" title="如何在 Swift 2.0 中实现从某下标开始遍历数组">
+ <a href="/2016/02/19/diving-into-the-big-world-of-api-guidelines/" title="探索 API 指南的大世界">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  如何在 Swift 2.0 中实现从某下标开始遍历数组</span>
+  探索 API 指南的大世界</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2015/09/14/[已审待定稿]Swift-什么时候使用结构体和类/"  title="">
+<a href="/2016/02/04/sorting-and-sharing-playground-pages/"  title="排列 和 共享 playground 页面">
  <strong>NEXT:</strong><br/> 
- <span>(no title)
+ <span>排列 和 共享 playground 页面
 </span>
 </a>
 </div>
@@ -137,7 +153,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目錄</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick_Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create_a_new_post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run_server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate_static_files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy_to_remote_sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+  
   </div>
 
 <div id="asidepart">
